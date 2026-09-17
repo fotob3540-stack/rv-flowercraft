@@ -301,12 +301,19 @@ document.getElementById("shareBtn").onclick=async()=>{
   try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(location.href);toast("Link toko disalin")}}catch(e){}
 };
 console.log("OWNER BUTTON SCRIPT AKTIF");
-document.getElementById("ownerBtn").onclick=()=>{
-  document.getElementById("ownerLoginModal").hidden=false;
-  document.getElementById("ownerPassword").value="";
-  document.getElementById("ownerLoginError").textContent="";
-};
-document.getElementById("ownerLoginForm").addEventListener("submit",async e=>{
+const ownerBtn=document.getElementById("ownerBtn");
+const ownerLoginModal=document.getElementById("ownerLoginModal");
+const ownerPassword=document.getElementById("ownerPassword");
+const ownerLoginError=document.getElementById("ownerLoginError");
+
+if(ownerBtn){
+  ownerBtn.addEventListener("click",()=>{
+    if(ownerLoginModal) ownerLoginModal.hidden=false;
+    if(ownerPassword) ownerPassword.value="";
+    if(ownerLoginError) ownerLoginError.textContent="";
+  });
+}
+document.getElementById("ownerLoginForm")?.addEventListener("submit",async e=>{
   e.preventDefault();
 
   const email=document.getElementById("ownerEmail").value;
@@ -487,3 +494,4 @@ async function loadProductsFromSupabase(){
 
   renderAll();
 }
+loadProductsFromSupabase();

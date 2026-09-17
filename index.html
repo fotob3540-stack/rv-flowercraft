@@ -87,6 +87,10 @@
     <button id="instagramBtn">📸 <span>Buka Instagram</span><b>›</b></button>
     <button id="shareBtn">🔗 <span>Bagikan link toko</span><b>›</b></button>
     <button id="ownerBtn">⚙ <span>Dashboard owner / Kelola katalog</span><b>›</b></button>
+
+<button id="ownerLoginDirectBtn" type="button" onclick="document.getElementById('ownerLoginModal').hidden=false;document.getElementById('ownerPassword').value='';document.getElementById('ownerLoginError').textContent='';">
+  <span>🔐 Login sebagai Owner</span><b>›</b>
+</button>
   </div>
 </section>
 <section class="page" id="owner">
@@ -167,7 +171,7 @@
     <h2>Login Dashboard</h2>
     <p>Masuk untuk mengelola katalog RV FLOWERCRAFT.</p>
     <form id="ownerLoginForm">
-      <input id="ownerEmail" type="email" value="fotob3540@gmail.com" readonly>
+      <input id="ownerEmail" type="email" value="mraffiirawan11.10@gmail.com">
       <input id="ownerPassword" type="password" placeholder="Password Owner" autocomplete="current-password" required>
       <button class="pill" type="submit">🔐 Masuk Dashboard</button>
     </form>
@@ -196,5 +200,220 @@
 <div id="toast" class="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
+<script id="directOwnerLogin">
+(function(){
+
+const btn=document.getElementById("ownerLoginDirectBtn");
+
+if(!btn)return;
+
+btn.onclick=function(){
+
+  let old=document.getElementById("directLoginBox");
+  if(old)old.remove();
+
+  const wrap=document.createElement("div");
+  wrap.id="directLoginBox";
+
+  wrap.style.cssText=`
+    position:fixed;
+    inset:0;
+    z-index:999999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(0,0,0,.65);
+    backdrop-filter:blur(10px);
+  `;
+
+  wrap.innerHTML=`
+    <div style="
+      width:min(420px,100%);
+      background:white;
+      color:#222;
+      border-radius:24px;
+      padding:28px 22px;
+      box-shadow:0 20px 60px rgba(0,0,0,.35);
+      position:relative;
+      font-family:inherit;
+    ">
+
+      <button id="directLoginClose" type="button"
+        style="
+          position:absolute;
+          right:14px;
+          top:12px;
+          width:36px;
+          height:36px;
+          border:0;
+          border-radius:50%;
+          background:#f3f3f3;
+          font-size:24px;
+          cursor:pointer;
+        ">×</button>
+
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:42px">🔐</div>
+        <div style="font-size:12px;letter-spacing:2px;font-weight:bold;color:#999">
+          OWNER
+        </div>
+        <h2 style="margin:5px 0;font-size:25px">
+          Login Dashboard
+        </h2>
+        <p style="margin:0;color:#777;font-size:14px">
+          Masuk untuk mengelola katalog RV FLOWERCRAFT
+        </p>
+      </div>
+
+      <form id="directLoginForm">
+
+        <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:6px">
+          Email Owner
+        </label>
+
+        <input value="mraffiirawan11.10@gmail.com"
+          style="
+            width:100%;
+            box-sizing:border-box;
+            padding:13px;
+            border:1px solid #ddd;
+            border-radius:12px;
+            margin-bottom:14px;
+            background:#f5f5f5;
+          ">
+
+        <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:6px">
+          Password
+        </label>
+
+        <input id="directPassword"
+          type="password"
+          placeholder="Masukkan password owner"
+          autocomplete="current-password"
+          required
+          style="
+            width:100%;
+            box-sizing:border-box;
+            padding:13px;
+            border:1px solid #ddd;
+            border-radius:12px;
+            margin-bottom:8px;
+            font-size:16px;
+          ">
+
+        <div id="directLoginError"
+          style="
+            min-height:20px;
+            color:#d33;
+            font-size:13px;
+            margin-bottom:10px;
+          ">
+        </div>
+
+        <button type="submit"
+          style="
+            width:100%;
+            padding:14px;
+            border:0;
+            border-radius:14px;
+            background:#111;
+            color:white;
+            font-size:15px;
+            font-weight:bold;
+            cursor:pointer;
+          ">
+          🔐 Masuk Dashboard
+        </button>
+
+      </form>
+    </div>
+  `;
+
+  document.body.appendChild(wrap);
+
+  const password=document.getElementById("directPassword");
+  const form=document.getElementById("directLoginForm");
+  const error=document.getElementById("directLoginError");
+  const close=document.getElementById("directLoginClose");
+
+  close.onclick=()=>wrap.remove();
+
+  wrap.onclick=e=>{
+    if(e.target===wrap)wrap.remove();
+  };
+
+  setTimeout(()=>password.focus(),100);
+
+  form.onsubmit=async function(e){
+
+    e.preventDefault();
+
+    const value=password.value.trim();
+
+    if(!value){
+      error.textContent="Masukkan password owner.";
+      password.focus();
+      return;
+    }
+
+    const submit=form.querySelector("button[type=submit]");
+    submit.disabled=true;
+    submit.textContent="⏳ Memeriksa...";
+
+    try{
+
+      if(typeof supabaseClient==="undefined"){
+        error.textContent="Supabase belum siap. Silakan refresh halaman.";
+        return;
+      }
+
+      const result=await supabaseClient.auth.signInWithPassword({
+        email:"mraffiirawan11.10@gmail.com",
+        password:value
+      });
+
+      if(result.error){
+        console.error(result.error);
+        error.textContent="Password owner salah.";
+        return;
+      }
+
+      wrap.remove();
+
+      if(typeof go==="function"){
+        go("owner");
+      }else{
+        const owner=document.getElementById("owner");
+        if(owner){
+          document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+          owner.classList.add("active");
+        }
+      }
+
+      if(typeof renderAll==="function")renderAll();
+
+      alert("✅ Login Owner berhasil!");
+
+    }catch(err){
+
+      console.error(err);
+      error.textContent="Terjadi kesalahan saat login.";
+
+    }finally{
+
+      submit.disabled=false;
+      submit.textContent="🔐 Masuk Dashboard";
+
+    }
+  };
+
+};
+
+})();
+</script>
+
+
+
 </body>
 </html>
