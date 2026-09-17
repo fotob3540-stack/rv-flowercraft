@@ -1,3 +1,7 @@
+const SUPABASE_URL="https://ftnarupbhwxzaitfzczq.supabase.co";
+const SUPABASE_KEY="sb_publishable_n5n1qIaWIhr6H5z6e1ecRQ_q6lT05aa";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
 const loader=document.getElementById("loader"),skip=document.getElementById("skip");
 function closeLoader(){if(!loader)return;loader.classList.add("hide");setTimeout(()=>loader.remove(),550)}
 skip?.addEventListener("click",closeLoader);setTimeout(closeLoader,2500);
@@ -194,17 +198,83 @@ function parseRupiah(value){
   return digits?Number(digits):0;
 }
 
-document.getElementById("productForm").addEventListener("submit",e=>{
+document.getElementById("productForm").addEventListener("submit",async e=>{
   e.preventDefault();
-  const p={id:"p"+Date.now(),name:document.getElementById("pName").value.trim(),price:parseRupiah(document.getElementById("pPrice").value),category:document.getElementById("pCategory").value,image:selectedImageData,desc:document.getElementById("pDesc").value.trim()};
-  if(!p.name||p.price<0)return;
-  const oldProducts=db.products;
-  db.products=[p,...db.products];
-  if(saveDB()){
-    selectedImageData="";e.target.reset();imagePreview.hidden=true;imagePreview.innerHTML="";
-    toast("Produk berhasil ditambahkan");
-  }else{
-    db.products=oldProducts;
+
+  const btn=e.target.querySelector('button[type="submit"]');
+  btn.disabled=true;
+  btn.textContent="⏳ Menyimpan...";
+
+  try{
+    const {data:{user},error:userError}=await supabaseClient.auth.getUser();
+
+    if(userError || !user){
+      toast("Silakan login sebagai owner terlebih dahulu");
+      return;
+    }
+
+    const name=document.getElementById("pName").value.trim();
+    const price=parseRupiah(document.getElementById("pPrice").value);
+    const category=document.getElementById("pCategory").value;
+    const description=document.getElementById("pDesc").value.trim();
+
+    let imageUrl=null;
+
+    if(selectedImageData){
+      const blob=await fetch(selectedImageData).then(r=>r.blob());
+      const fileName=`products/${Date.now()}.jpg`;
+
+      const {error:uploadError}=await supabaseClient
+        .storage
+        .from("product-images")
+        .upload(fileName,blob,{
+          contentType:"image/jpeg"
+        });
+
+      if(uploadError) throw uploadError;
+
+      const {data:urlData}=supabaseClient
+        .storage
+        .from("product-images")
+        .getPublicUrl(fileName);
+
+      imageUrl=urlData.publicUrl;
+    }
+
+    const {data:product,error:insertError}=await supabaseClient
+      .from("products")
+      .insert({
+        id:"p"+Date.now(),
+        name:name,
+        price:price,
+        category:category,
+        image:imageUrl,
+        description:description
+      })
+      .select()
+      .single();
+
+    if(insertError) throw insertError;
+
+    db.products=[{
+      ...product,
+      desc:product.description || ""
+    },...db.products];
+
+    selectedImageData="";
+    e.target.reset();
+    imagePreview.hidden=true;
+    imagePreview.innerHTML="";
+
+    renderAll();
+    toast("Produk berhasil disimpan ke Supabase ✅");
+
+  }catch(err){
+    console.error(err);
+    toast("Gagal menyimpan: "+(err.message || "Error"));
+  }finally{
+    btn.disabled=false;
+    btn.textContent="＋ Tambah produk";
   }
 });
 
@@ -230,7 +300,33 @@ document.getElementById("shareBtn").onclick=async()=>{
   const data={title:db.store.name||"RV FLOWERCRAFT",text:"Yuk lihat katalog RV FLOWERCRAFT!",url:location.href};
   try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(location.href);toast("Link toko disalin")}}catch(e){}
 };
-document.getElementById("ownerBtn").onclick=()=>go("owner");
+console.log("OWNER BUTTON SCRIPT AKTIF");
+document.getElementById("ownerBtn").onclick=()=>{
+  document.getElementById("ownerLoginModal").hidden=false;
+  document.getElementById("ownerPassword").value="";
+  document.getElementById("ownerLoginError").textContent="";
+};
+document.getElementById("ownerLoginForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+
+  const email=document.getElementById("ownerEmail").value;
+  const password=document.getElementById("ownerPassword").value;
+  const errorBox=document.getElementById("ownerLoginError");
+
+  const {error}=await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+    errorBox.textContent="Email atau password salah.";
+    return;
+  }
+
+  document.getElementById("ownerLoginModal").hidden=true;
+  go("owner");
+  toast("Login owner berhasil ✓");
+});
 document.getElementById("menuBtn").onclick=()=>go("profile");
 document.getElementById("resetBtn").onclick=()=>{
   if(confirm("Reset semua produk dan pengaturan toko di browser ini?")){db=cloneDefaults();localStorage.removeItem(KEY);saveDB();toast("Data toko direset")}
@@ -373,3 +469,21 @@ setInterval(()=>{
   }
 },1000);
 loadPrayerData();
+async function loadProductsFromSupabase(){
+  const {data,error}=await supabaseClient
+    .from("products")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    console.error("Gagal mengambil produk Supabase:",error);
+    return;
+  }
+
+  db.products=(data||[]).map(p=>({
+    ...p,
+    desc:p.description||""
+  }));
+
+  renderAll();
+}
