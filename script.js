@@ -726,3 +726,110 @@ loadProductsFromSupabase();
     search.focus();
   });
 })();
+
+
+/* RV ONLINE ANALYTICS */
+async function trackEvent(type, productId=null){
+  try{
+    await supabaseClient
+      .from("store_analytics")
+      .insert({
+        event_type:type,
+        product_id:productId
+      });
+  }catch(e){
+    console.warn("Analytics:",e);
+  }
+}
+
+function trackVisitor(){
+  const key="rv_analytics_visitor_"+new Date().toISOString().slice(0,10);
+  if(!sessionStorage.getItem(key)){
+    sessionStorage.setItem(key,"1");
+    trackEvent("visitor");
+  }
+}
+
+function setupOnlineAnalytics(){
+  trackVisitor();
+
+  document.addEventListener("click",e=>{
+    const wa=e.target.closest("[data-wa],#profileWaBtn");
+    if(wa){
+      trackEvent("whatsapp_click",wa.dataset.wa||null);
+    }
+
+    const share=e.target.closest("#shareBtn,#pdShare");
+    if(share){
+      trackEvent("link_click");
+    }
+
+    const card=e.target.closest("[data-card]");
+    if(card){
+      trackEvent("order_request",card.dataset.card||null);
+    }
+  });
+}
+
+setupOnlineAnalytics();
+
+/* Catat saat detail produk dibuka */
+const oldOpenProductDetail=window.openProductDetail;
+if(typeof oldOpenProductDetail==="function"){
+  window.openProductDetail=function(product){
+    trackEvent("product_view",product?.id||null);
+    return oldOpenProductDetail(product);
+  };
+}
+
+/* Dashboard analytics */
+async function loadAnalytics(){
+  try{
+    const {data,error}=await supabaseClient
+      .from("store_analytics")
+      .select("event_type,created_at");
+
+    if(error) throw error;
+
+    const today=new Date().toISOString().slice(0,10);
+    const events=data||[];
+
+    const count=(type,onlyToday=false)=>{
+      return events.filter(x=>
+        x.event_type===type &&
+        (!onlyToday || String(x.created_at).slice(0,10)===today)
+      ).length;
+    };
+
+    const set=(id,value)=>{
+      const el=document.getElementById(id);
+      if(el)el.textContent=value;
+    };
+
+    set("analyticsVisitors",count("visitor"));
+    set("analyticsVisitorsToday",count("visitor",true));
+    set("analyticsViews",count("product_view"));
+    set("analyticsClicks",count("link_click"));
+    set("analyticsWA",count("whatsapp_click"));
+    set("analyticsOrders",count("order_request",true));
+
+  }catch(e){
+    console.warn("Gagal memuat analytics:",e);
+  }
+}
+
+loadAnalytics();
+
+
+/* Analytics refresh button */
+document.getElementById("analyticsRefresh")?.addEventListener("click",async function(){
+  this.disabled=true;
+  this.textContent="…";
+  try{
+    await loadAnalytics();
+    toast("Statistik diperbarui ✓");
+  }finally{
+    this.disabled=false;
+    this.textContent="↻";
+  }
+});

@@ -141,6 +141,60 @@
     <h3>Produk tersimpan</h3>
     <div id="ownerProducts"></div>
   </div>
+
+<div class="owner-card analytics-owner-card" id="rvAnalyticsPanel">
+  <div class="analytics-header">
+    <div>
+      <small class="label">LIVE ANALYTICS</small>
+      <h3>📊 Statistik Toko</h3>
+    </div>
+    <button type="button" class="analytics-refresh" id="analyticsRefresh">↻</button>
+  </div>
+
+  <div class="analytics-grid">
+    <div class="analytics-box">
+      <span>👥</span>
+      <small>Pengunjung Total</small>
+      <strong id="analyticsVisitors">0</strong>
+    </div>
+
+    <div class="analytics-box">
+      <span>🟢</span>
+      <small>Hari Ini</small>
+      <strong id="analyticsVisitorsToday">0</strong>
+    </div>
+
+    <div class="analytics-box">
+      <span>👁️</span>
+      <small>Produk Dilihat</small>
+      <strong id="analyticsViews">0</strong>
+    </div>
+
+    <div class="analytics-box">
+      <span>🔗</span>
+      <small>Link Ditekan</small>
+      <strong id="analyticsClicks">0</strong>
+    </div>
+
+    <div class="analytics-box">
+      <span>💬</span>
+      <small>WhatsApp</small>
+      <strong id="analyticsWA">0</strong>
+    </div>
+
+    <div class="analytics-box">
+      <span>🛒</span>
+      <small>Order Hari Ini</small>
+      <strong id="analyticsOrders">0</strong>
+    </div>
+  </div>
+
+  <div class="analytics-status">
+    <span class="status-dot"></span>
+    <span>Analytics Online • Supabase</span>
+  </div>
+</div>
+
   <div class="owner-card">
     <h3>Pengaturan toko</h3>
     <form id="storeForm">
@@ -650,6 +704,100 @@ border:0;
 background:none;
 font-size:22px;
 color:#999;
+}
+</style>
+
+<style id="rvAnalyticsStyle">
+.analytics-owner-card{
+  position:relative;
+  overflow:hidden;
+}
+
+.analytics-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:15px;
+}
+
+.analytics-header h3{
+  margin:4px 0 0;
+}
+
+.analytics-refresh{
+  width:40px;
+  height:40px;
+  border:1px solid rgba(120,90,110,.15);
+  border-radius:13px;
+  background:rgba(255,255,255,.65);
+  font-size:22px;
+  cursor:pointer;
+}
+
+.analytics-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.analytics-box{
+  padding:15px;
+  border-radius:17px;
+  background:linear-gradient(
+    145deg,
+    rgba(255,255,255,.82),
+    rgba(249,239,247,.58)
+  );
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:
+    0 7px 22px rgba(80,50,70,.08),
+    inset 0 1px 0 rgba(255,255,255,.9);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+.analytics-box span{
+  display:block;
+  font-size:22px;
+  margin-bottom:7px;
+}
+
+.analytics-box small{
+  display:block;
+  opacity:.65;
+  font-size:11px;
+}
+
+.analytics-box strong{
+  display:block;
+  margin-top:4px;
+  font-size:25px;
+}
+
+.analytics-status{
+  margin-top:13px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:11px;
+  opacity:.65;
+}
+
+.status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#35b96b;
+  box-shadow:0 0 9px rgba(53,185,107,.55);
+}
+
+@media(max-width:420px){
+  .analytics-grid{
+    gap:8px;
+  }
+  .analytics-box{
+    padding:13px;
+  }
 }
 </style>
 </body>
