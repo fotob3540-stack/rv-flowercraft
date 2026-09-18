@@ -71,6 +71,79 @@ function productCard(p){
   return `<article class="product-card">${image}<div class="product-body"><small>${esc(p.category)}</small><h3>${esc(p.name)}</h3><p>${esc(p.desc||"Produk pilihan RV FLOWERCRAFT.")}</p><strong>${rupiah(p.price)}</strong><div class="product-actions"><button class="pill wa-btn" data-wa="${esc(p.id)}">💬 Chat WhatsApp</button><button class="card-btn" data-card="${esc(p.id)}" type="button">💌 Kartu ucapan</button></div></div></article>`;
 }
 
+
+function favoriteKey(id){
+  return "rv_flowercraft_favorite_"+id;
+}
+
+function isProductFavorite(id){
+  return localStorage.getItem(favoriteKey(id))==="1";
+}
+
+function updateFavoriteButton(p){
+  const btn=document.getElementById("pdFavorite");
+  if(!btn)return;
+
+  const active=isProductFavorite(p.id);
+
+  btn.textContent=active ? "♥ Favorit" : "♡ Favorit";
+  btn.classList.toggle("favorite-active",active);
+}
+
+function toggleProductFavorite(p){
+  if(!p)return;
+
+  const key=favoriteKey(p.id);
+
+  if(isProductFavorite(p.id)){
+    localStorage.removeItem(key);
+    toast("Dihapus dari favorit");
+  }else{
+    localStorage.setItem(key,"1");
+    toast("Ditambahkan ke favorit ❤️");
+  }
+
+  updateFavoriteButton(p);
+}
+
+async function shareProduct(p){
+  if(!p)return;
+
+  const url=new URL(window.location.href);
+  url.searchParams.set("product",p.id);
+
+  const shareData={
+    title:p.name || "RV FLOWERCRAFT",
+    text:"Lihat produk "+(p.name||"RV FLOWERCRAFT")+" - "+rupiah(p.price),
+    url:url.href
+  };
+
+  try{
+    if(navigator.share){
+      await navigator.share(shareData);
+      return;
+    }
+
+    if(navigator.clipboard){
+      await navigator.clipboard.writeText(url.href);
+      toast("Link produk berhasil disalin 🔗");
+      return;
+    }
+
+    prompt("Salin link produk ini:",url.href);
+
+  }catch(err){
+    if(err && err.name==="AbortError")return;
+
+    try{
+      await navigator.clipboard.writeText(url.href);
+      toast("Link produk berhasil disalin 🔗");
+    }catch(e){
+      prompt("Salin link produk ini:",url.href);
+    }
+  }
+}
+
 function openProductDetail(p){
   if(!p)return;
 
@@ -99,6 +172,23 @@ function openProductDetail(p){
 
   modal.hidden=false;
   document.body.classList.add("pd-open");
+
+  updateFavoriteButton(p);
+
+  const favoriteBtn=document.getElementById("pdFavorite");
+  const shareBtn=document.getElementById("pdShare");
+
+  if(favoriteBtn){
+    favoriteBtn.onclick=()=>{
+      toggleProductFavorite(p);
+    };
+  }
+
+  if(shareBtn){
+    shareBtn.onclick=()=>{
+      shareProduct(p);
+    };
+  }
 
   document.getElementById("pdOrder").onclick=()=>{
     openWhatsApp(p);

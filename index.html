@@ -197,7 +197,11 @@
       <strong id="pdPrice"></strong>
       <p id="pdDescription"></p>
 
-      <button class="pill" id="pdOrder">
+      <div class="pd-extra-actions">
+      <button type="button" class="pd-action-btn" id="pdFavorite">♡ Favorit</button>
+      <button type="button" class="pd-action-btn" id="pdShare">🔗 Bagikan</button>
+    </div>
+    <button class="pill" id="pdOrder">
         💬 Pesan via WhatsApp
       </button>
     </div>
@@ -577,5 +581,44 @@ btn.onclick=function(){
 
 
 
+
+<style id="favoriteShareStyle">
+.pd-extra-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.pd-action-btn{
+  border:1px solid #ead7e0;
+  background:#fff;
+  color:#555;
+  padding:12px;
+  border-radius:14px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.pd-action-btn:hover{
+  transform:translateY(-1px);
+  background:#fff7fa;
+}
+
+.pd-action-btn.favorite-active{
+  color:#d83f7d;
+  border-color:#f0a8c5;
+  background:#fff1f6;
+}
+
+@media(max-width:500px){
+  .pd-action-btn{
+    padding:11px 8px;
+    font-size:13px;
+  }
+}
+</style>
 </body>
 </html>
