@@ -423,6 +423,62 @@ body.pd-open{
     <button class="pill card-send" id="cardSend" type="button">💬 Kirim ucapan lewat WhatsApp</button>
   </div>
 </div>
+
+<!-- CUSTOM PESANAN -->
+<div id="customModal" class="card-modal" hidden>
+  <div class="card-backdrop" id="customBackdrop"></div>
+
+  <div class="card-dialog custom-dialog" role="dialog" aria-modal="true">
+    <button class="card-close" id="customClose" type="button">×</button>
+
+    <div class="card-icon">🎨</div>
+    <small class="label">CUSTOM PESANAN</small>
+    <h2>Custom buket kamu</h2>
+    <p id="customProduct" class="card-product"></p>
+
+    <div class="custom-form">
+
+      <label>
+        <span>🌸 Warna bunga</span>
+        <select id="customFlowerColor">
+          <option value="">Pilih warna bunga</option>
+          <option>Hitam</option>
+          <option>Pink</option>
+          <option>Biru</option>
+          <option>Maroon</option>
+          <option>Ungu</option>
+          <option>Navy</option>
+        </select>
+      </label>
+
+      <label>
+        <span>📄 Warna kertas buket</span>
+        <select id="customPaperColor">
+          <option value="">Pilih warna kertas</option>
+          <option>Pink</option>
+          <option>Putih</option>
+          <option>Hitam</option>
+          <option>Ungu</option>
+          <option>Merah</option>
+          <option>Coklat</option>
+        </select>
+      </label>
+
+    </div>
+
+    <div class="card-preview">
+      <small>RINGKASAN PESANAN</small>
+      <div id="customPreview">
+        Pilih warna bunga dan warna kertas.
+      </div>
+    </div>
+
+    <button class="pill card-send" id="customSend" type="button">
+      💬 Pesan via WhatsApp
+    </button>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>

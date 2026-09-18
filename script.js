@@ -77,7 +77,7 @@ function productCard(p){
     ? `<div class="promo-price"><s class="price-old">${normal}</s><strong>${rupiah(p.promo_price)}</strong><small>🏷️ PROMO</small></div>`
     : `<strong>${normal}</strong>`;
 
-  return `<article class="product-card">${image}<div class="product-body"><small>${esc(p.category)}</small><h3>${esc(p.name)}</h3><p>${esc(p.desc||"Produk pilihan RV FLOWERCRAFT.")}</p>${priceHTML}<div class="product-actions"><button class="pill wa-btn" data-wa="${esc(p.id)}">💬 Chat WhatsApp</button><button class="card-btn" data-card="${esc(p.id)}" type="button">💌 Kartu ucapan</button></div></div></article>`;
+  return `<article class="product-card">${image}<div class="product-body"><small>${esc(p.category)}</small><h3>${esc(p.name)}</h3><p>${esc(p.desc||"Produk pilihan RV FLOWERCRAFT.")}</p>${priceHTML}<div class="product-actions"><button class="pill wa-btn" data-wa="${esc(p.id)}">💬 Pesan via WhatsApp</button><button class="card-btn" data-card="${esc(p.id)}" type="button">💌 Kartu ucapan</button><button class="card-btn custom-btn" data-custom="${esc(p.id)}" type="button">🎨 Custom Pesanan</button></div></div></article>`;
 }
 
 
@@ -202,6 +202,15 @@ function openProductDetail(p){
   document.getElementById("pdOrder").onclick=()=>{
     openWhatsApp(p);
   };
+
+  const pdCustom=document.getElementById("pdCustom");
+  if(pdCustom){
+    pdCustom.onclick=(e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      openCustomModal(p);
+    };
+  }
 }
 
 function closeProductDetail(){
@@ -971,4 +980,143 @@ if(typeof oldRenderOwner==="function"){
   };
 }
 
+
+
+/* =========================================
+   RV FLOWERCRAFT - CUSTOM PESANAN
+========================================= */
+
+let customProduct=null;
+
+function openCustomModal(p){
+  const modal=document.getElementById("customModal");
+  if(!modal)return;
+
+  customProduct=p;
+
+  document.getElementById("customProduct").textContent=
+    `${p.name} · ${effectivePrice(p) ? rupiah(effectivePrice(p)) : rupiah(p.price)}`;
+
+  document.getElementById("customFlowerColor").value="";
+  document.getElementById("customPaperColor").value="";
+
+  updateCustomPreview();
+
+  modal.hidden=false;
+  document.body.classList.add("modal-open");
+}
+
+function closeCustomModal(){
+  const modal=document.getElementById("customModal");
+  if(!modal)return;
+
+  modal.hidden=true;
+  document.body.classList.remove("modal-open");
+  customProduct=null;
+}
+
+function updateCustomPreview(){
+  const flower=document.getElementById("customFlowerColor")?.value;
+  const paper=document.getElementById("customPaperColor")?.value;
+  const preview=document.getElementById("customPreview");
+
+  if(!preview)return;
+
+  if(!flower && !paper){
+    preview.textContent="Pilih warna bunga dan warna kertas.";
+    return;
+  }
+
+  preview.innerHTML=
+    `🌸 Bunga: <b>${flower||"Belum dipilih"}</b><br>`+
+    `📄 Kertas: <b>${paper||"Belum dipilih"}</b>`;
+}
+
+function sendCustomWhatsApp(){
+  if(!customProduct)return;
+
+  const flower=document.getElementById("customFlowerColor").value;
+  const paper=document.getElementById("customPaperColor").value;
+
+  if(!flower){
+    toast("Pilih warna bunga terlebih dahulu");
+    return;
+  }
+
+  if(!paper){
+    toast("Pilih warna kertas terlebih dahulu");
+    return;
+  }
+
+  const phone=waNumber();
+
+  if(!phone){
+    toast("Nomor WhatsApp pemilik belum diatur");
+    return;
+  }
+
+  const price=effectivePrice(customProduct);
+
+  const message=
+`Halo RV FLOWERCRAFT 👋
+
+Saya ingin custom pesanan:
+
+🌸 Produk: ${customProduct.name}
+💰 Harga: ${rupiah(price)}
+🌿 Kategori: ${customProduct.category}
+
+🎨 Detail Custom:
+🌸 Warna bunga: ${flower}
+📄 Warna kertas buket: ${paper}
+
+Apakah bisa dibuat sesuai pilihan tersebut?`;
+
+  const url=
+    `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+  window.open(url,"_blank","noopener");
+
+  closeCustomModal();
+}
+
+/* Tombol Custom pada kartu produk */
+function bindCustomButtons(root=document){
+  root.querySelectorAll("[data-custom]").forEach(btn=>{
+    btn.onclick=()=>{
+      const p=db.products.find(x=>x.id===btn.dataset.custom);
+      if(p)openCustomModal(p);
+    };
+  });
+}
+
+document.addEventListener("change",e=>{
+  if(
+    e.target.id==="customFlowerColor" ||
+    e.target.id==="customPaperColor"
+  ){
+    updateCustomPreview();
+  }
+});
+
+document.getElementById("customClose")
+  ?.addEventListener("click",closeCustomModal);
+
+document.getElementById("customBackdrop")
+  ?.addEventListener("click",closeCustomModal);
+
+document.getElementById("customSend")
+  ?.addEventListener("click",sendCustomWhatsApp);
+
+/* Bind ulang setelah katalog dirender */
+const oldBindWaButtons=window.bindWaButtons;
+
+if(typeof oldBindWaButtons==="function"){
+  window.bindWaButtons=function(root){
+    oldBindWaButtons(root);
+    bindCustomButtons(root);
+  };
+}else{
+  bindCustomButtons(document);
+}
 
