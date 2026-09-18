@@ -299,10 +299,35 @@ function renderOwner(){
   box.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>deleteProduct(b.dataset.del));
   updateVisitorInfo();
 }
-function deleteProduct(id){
-  const p=db.products.find(x=>x.id===id);if(!p)return;
+async function deleteProduct(id){
+  const p=db.products.find(x=>x.id===id);
+  if(!p)return;
+
   if(!confirm(`Hapus produk "${p.name}"?`))return;
-  db.products=db.products.filter(x=>x.id!==id);saveDB();toast("Produk dihapus");
+
+  try{
+    const {error}=await supabaseClient
+      .from("products")
+      .delete()
+      .eq("id",id);
+
+    if(error){
+      console.error(error);
+      toast("Gagal menghapus produk dari server");
+      return;
+    }
+
+    db.products=db.products.filter(x=>x.id!==id);
+    saveDB();
+    renderOwner();
+    renderProducts();
+    renderHome();
+
+    toast("Produk berhasil dihapus");
+  }catch(err){
+    console.error(err);
+    toast("Terjadi kesalahan saat menghapus produk");
+  }
 }
 
 let selectedImageData="";
