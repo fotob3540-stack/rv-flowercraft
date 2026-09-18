@@ -670,6 +670,7 @@ async function loadProductsFromSupabase(){
 
   if(error){
     console.error("Gagal mengambil produk Supabase:",error);
+    alert("SUPABASE ERROR: " + (error.message || JSON.stringify(error)));
     return;
   }
 
