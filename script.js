@@ -647,3 +647,57 @@ async function loadProductsFromSupabase(){
   renderAll();
 }
 loadProductsFromSupabase();
+
+
+(function(){
+  const search=document.getElementById("productSearch");
+  const clear=document.getElementById("clearProductSearch");
+  if(!search)return;
+
+  search.addEventListener("input",function(){
+    const q=this.value.trim().toLowerCase();
+    const active=document.querySelector(".chip.active");
+    const category=active ? active.dataset.category : "Semua";
+
+    let products=db.products || [];
+
+    if(category!=="Semua"){
+      products=products.filter(p=>p.category===category);
+    }
+
+    if(q){
+      products=products.filter(p=>{
+        const text=[
+          p.name,
+          p.category,
+          p.desc,
+          p.description
+        ].filter(Boolean).join(" ").toLowerCase();
+
+        return text.includes(q);
+      });
+    }
+
+    const grid=document.getElementById("productGrid");
+    if(!grid)return;
+
+    grid.innerHTML=products.length
+      ? products.map(productCard).join("")
+      : '<div class="search-empty"><div>🔎</div><h3>Produk tidak ditemukan</h3><p>Coba kata pencarian lain.</p></div>';
+
+    bindWaButtons(grid);
+
+    const count=document.getElementById("productCount");
+    if(count){
+      count.textContent=q
+        ? products.length+" ditemukan"
+        : (db.products||[]).length+" produk";
+    }
+  });
+
+  clear?.addEventListener("click",function(){
+    search.value="";
+    search.dispatchEvent(new Event("input"));
+    search.focus();
+  });
+})();

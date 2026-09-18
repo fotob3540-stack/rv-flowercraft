@@ -48,6 +48,12 @@
 </section>
 <section class="page" id="products">
   <div class="section-head top"><div><small class="label">KATALOG</small><h2>Produk bunga</h2></div><span id="productCount">0 produk</span></div>
+  <div class="catalog-search">
+    <span>🔎</span>
+    <input id="productSearch" type="search" placeholder="Cari produk..." autocomplete="off">
+    <button id="clearProductSearch" type="button">×</button>
+  </div>
+
   <div class="chips">
     <button class="chip active" data-category="Semua">Semua</button>
     <button class="chip" data-category="Buket">Buket</button>
@@ -618,6 +624,32 @@ btn.onclick=function(){
     padding:11px 8px;
     font-size:13px;
   }
+}
+</style>
+<style>
+.catalog-search{
+display:flex;
+align-items:center;
+gap:8px;
+margin:12px 0;
+padding:0 12px;
+background:#fff;
+border:1px solid #eadde3;
+border-radius:16px;
+}
+.catalog-search input{
+flex:1;
+border:0;
+outline:0;
+padding:13px 4px;
+background:transparent;
+font-size:14px;
+}
+.catalog-search button{
+border:0;
+background:none;
+font-size:22px;
+color:#999;
 }
 </style>
 </body>
