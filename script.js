@@ -70,6 +70,68 @@ function productCard(p){
   const image=p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)}" onerror="this.style.display='none'">`:`<div class="product-placeholder">✿</div>`;
   return `<article class="product-card">${image}<div class="product-body"><small>${esc(p.category)}</small><h3>${esc(p.name)}</h3><p>${esc(p.desc||"Produk pilihan RV FLOWERCRAFT.")}</p><strong>${rupiah(p.price)}</strong><div class="product-actions"><button class="pill wa-btn" data-wa="${esc(p.id)}">💬 Chat WhatsApp</button><button class="card-btn" data-card="${esc(p.id)}" type="button">💌 Kartu ucapan</button></div></div></article>`;
 }
+
+function openProductDetail(p){
+  if(!p)return;
+
+  const modal=document.getElementById("productDetailModal");
+  const img=document.getElementById("pdImage");
+  const category=document.getElementById("pdCategory");
+  const name=document.getElementById("pdName");
+  const price=document.getElementById("pdPrice");
+  const description=document.getElementById("pdDescription");
+  const imageWrap=document.getElementById("pdImageWrap");
+
+  category.textContent=p.category||"Produk";
+  name.textContent=p.name||"Produk RV FLOWERCRAFT";
+  price.textContent=rupiah(p.price);
+  description.textContent=p.desc||p.description||"Produk pilihan RV FLOWERCRAFT.";
+
+  imageWrap.classList.remove("zoomed");
+
+  if(p.image){
+    img.src=p.image;
+    img.style.display="block";
+  }else{
+    img.removeAttribute("src");
+    img.style.display="none";
+  }
+
+  modal.hidden=false;
+  document.body.classList.add("pd-open");
+
+  document.getElementById("pdOrder").onclick=()=>{
+    openWhatsApp(p);
+  };
+}
+
+function closeProductDetail(){
+  const modal=document.getElementById("productDetailModal");
+  if(modal)modal.hidden=true;
+  document.body.classList.remove("pd-open");
+}
+
+document.addEventListener("click",e=>{
+  const card=e.target.closest(".product-card");
+
+  if(card && !e.target.closest("button,.wa-btn,.card-btn")){
+    const buttons=card.querySelectorAll("[data-wa]");
+    const id=buttons[0]?.dataset.wa;
+
+    if(id){
+      const p=db.products.find(x=>x.id===id);
+      if(p)openProductDetail(p);
+    }
+  }
+});
+
+document.getElementById("pdClose")?.addEventListener("click",closeProductDetail);
+document.getElementById("pdBackdrop")?.addEventListener("click",closeProductDetail);
+
+document.getElementById("pdImageWrap")?.addEventListener("click",()=>{
+  document.getElementById("pdImageWrap").classList.toggle("zoomed");
+});
+
 function bindWaButtons(root){
   root.querySelectorAll("[data-wa]").forEach(b=>b.onclick=()=>{const p=db.products.find(x=>x.id===b.dataset.wa);if(p)openWhatsApp(p)})
   root.querySelectorAll("[data-card]").forEach(b=>b.onclick=()=>{const p=db.products.find(x=>x.id===b.dataset.card);if(p)openCard(p)})

@@ -179,7 +179,169 @@
   </div>
 </div>
 
-<div id="cardModal" class="card-modal" hidden>
+
+<div id="productDetailModal" hidden>
+  <div class="pd-backdrop" id="pdBackdrop"></div>
+
+  <div class="pd-box">
+    <button class="pd-close" id="pdClose">×</button>
+
+    <div class="pd-image-wrap" id="pdImageWrap">
+      <img id="pdImage" alt="Foto produk">
+      <div class="pd-zoom-text">🔍 Tekan foto untuk zoom</div>
+    </div>
+
+    <div class="pd-info">
+      <small id="pdCategory"></small>
+      <h2 id="pdName"></h2>
+      <strong id="pdPrice"></strong>
+      <p id="pdDescription"></p>
+
+      <button class="pill" id="pdOrder">
+        💬 Pesan via WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+#productDetailModal{
+  position:fixed;
+  inset:0;
+  z-index:999999;
+}
+
+.pd-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(10px);
+}
+
+.pd-box{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(520px,92%);
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  color:#222;
+  border-radius:25px;
+  box-shadow:0 25px 80px rgba(0,0,0,.45);
+}
+
+.pd-close{
+  position:absolute;
+  right:12px;
+  top:10px;
+  z-index:5;
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:50%;
+  background:rgba(0,0,0,.55);
+  color:#fff;
+  font-size:27px;
+  cursor:pointer;
+}
+
+.pd-image-wrap{
+  position:relative;
+  background:#f5f5f5;
+  min-height:280px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  cursor:zoom-in;
+}
+
+#pdImage{
+  display:block;
+  width:100%;
+  max-height:500px;
+  object-fit:contain;
+  transition:transform .3s ease;
+}
+
+.pd-image-wrap.zoomed{
+  cursor:zoom-out;
+}
+
+.pd-image-wrap.zoomed #pdImage{
+  transform:scale(2);
+}
+
+.pd-zoom-text{
+  position:absolute;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:7px 12px;
+  border-radius:20px;
+  background:rgba(0,0,0,.55);
+  color:white;
+  font-size:11px;
+}
+
+.pd-info{
+  padding:22px;
+}
+
+.pd-info small{
+  color:#888;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+#pdName{
+  margin:7px 0;
+  font-size:25px;
+}
+
+#pdPrice{
+  display:block;
+  color:#d84b88;
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+#pdDescription{
+  color:#666;
+  line-height:1.6;
+  margin-bottom:20px;
+}
+
+#pdOrder{
+  width:100%;
+}
+
+body.pd-open{
+  overflow:hidden;
+}
+
+.product-card{
+  cursor:pointer;
+}
+
+.product-card .product-actions,
+.product-card button{
+  cursor:pointer;
+}
+
+@media(max-width:500px){
+  .pd-box{
+    width:94%;
+  }
+
+  .pd-image-wrap{
+    min-height:240px;
+  }
+}
+</style>
+\n<div id="cardModal" class="card-modal" hidden>
   <div class="card-backdrop" id="cardBackdrop"></div>
   <div class="card-dialog" role="dialog" aria-modal="true" aria-labelledby="cardTitle">
     <button class="card-close" id="cardClose" type="button">×</button>
