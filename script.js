@@ -57,7 +57,8 @@ document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
 
 function waNumber(){return String(db.store.phone||"").replace(/\D/g,"").replace(/^0/,"62")}
 function whatsappMessage(p){
-  return `Halo RV FLOWERCRAFT 👋\n\nSaya tertarik dengan produk:\n🌸 ${p.name}\n💰 ${rupiah(p.price)}\n🌿 Kategori: ${p.category}\n\nApakah produk ini masih tersedia?`;
+  const harga=effectivePrice(p);
+  return `Halo RV FLOWERCRAFT 👋\n\nSaya tertarik dengan produk:\n🌸 ${p.name}\n💰 ${rupiah(harga)}${p.promo_active ? " (Harga Promo)" : ""}\n🌿 Kategori: ${p.category}\n\nApakah produk ini masih tersedia?`;
 }
 function openWhatsApp(p){
   const phone=waNumber();
@@ -68,7 +69,15 @@ function openWhatsApp(p){
 
 function productCard(p){
   const image=p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)}" onerror="this.style.display='none'">`:`<div class="product-placeholder">✿</div>`;
-  return `<article class="product-card">${image}<div class="product-body"><small>${esc(p.category)}</small><h3>${esc(p.name)}</h3><p>${esc(p.desc||"Produk pilihan RV FLOWERCRAFT.")}</p><strong>${rupiah(p.price)}</strong><div class="product-actions"><button class="pill wa-btn" data-wa="${esc(p.id)}">💬 Chat WhatsApp</button><button class="card-btn" data-card="${esc(p.id)}" type="button">💌 Kartu ucapan</button></div></div></article>`;
+
+  const normal=rupiah(p.price);
+  const hasPromo=p.promo_active && Number(p.promo_price)>0 && Number(p.promo_price)<Number(p.price);
+
+  const priceHTML=hasPromo
+    ? `<div class="promo-price"><s class="price-old">${normal}</s><strong>${rupiah(p.promo_price)}</strong><small>🏷️ PROMO</small></div>`
+    : `<strong>${normal}</strong>`;
+
+  return `<article class="product-card">${image}<div class="product-body"><small>${esc(p.category)}</small><h3>${esc(p.name)}</h3><p>${esc(p.desc||"Produk pilihan RV FLOWERCRAFT.")}</p>${priceHTML}<div class="product-actions"><button class="pill wa-btn" data-wa="${esc(p.id)}">💬 Chat WhatsApp</button><button class="card-btn" data-card="${esc(p.id)}" type="button">💌 Kartu ucapan</button></div></div></article>`;
 }
 
 
@@ -833,3 +842,132 @@ document.getElementById("analyticsRefresh")?.addEventListener("click",async func
     this.textContent="↻";
   }
 });
+
+
+/* RV PRODUCT PROMO SYSTEM */
+function productPriceHTML(p){
+  const normal=rupiah(p.price);
+
+  if(p.promo_active && Number(p.promo_price)>0 && Number(p.promo_price)<Number(p.price)){
+    return `<div class="promo-price">
+      <s class="price-old">${normal}</s>
+      <strong>${rupiah(p.promo_price)}</strong>
+      <small>🏷️ PROMO</small>
+    </div>`;
+  }
+
+  return `<strong>${normal}</strong>`;
+}
+
+function effectivePrice(p){
+  return p.promo_active && Number(p.promo_price)>0 && Number(p.promo_price)<Number(p.price)
+    ? Number(p.promo_price)
+    : Number(p.price);
+}
+
+async function toggleProductPromo(id){
+  const p=db.products.find(x=>x.id===id);
+  if(!p)return;
+
+  let active=!Boolean(p.promo_active);
+  let promoPrice=p.promo_price;
+
+  if(active){
+    const input=prompt(
+      `Harga promo untuk "${p.name}"\nHarga normal: ${rupiah(p.price)}\n\nMasukkan harga promo:`,
+      promoPrice ? Number(promoPrice).toLocaleString("id-ID") : ""
+    );
+
+    if(input===null)return;
+
+    promoPrice=parseRupiah(input);
+
+    if(!promoPrice || promoPrice>=Number(p.price)){
+      toast("Harga promo harus lebih rendah dari harga normal");
+      return;
+    }
+  }else{
+    promoPrice=null;
+  }
+
+  try{
+    const {data,error}=await supabaseClient
+      .from("products")
+      .update({
+        promo_price:active?promoPrice:null,
+        promo_active:active
+      })
+      .eq("id",id)
+      .select()
+      .single();
+
+    if(error)throw error;
+
+    const updated={
+      ...data,
+      desc:data.description||""
+    };
+
+    db.products=db.products.map(x=>x.id===id?updated:x);
+
+    saveDB();
+    renderOwner();
+    renderProducts();
+    renderHome();
+
+    toast(active?"Promo berhasil diaktifkan 🏷️":"Promo dimatikan");
+  }catch(err){
+    console.error(err);
+    toast("Gagal mengubah promo");
+  }
+}
+
+function renderPromoControl(p){
+  const active=Boolean(p.promo_active);
+
+  return `
+    <div class="promo-control">
+      <div>
+        <small>Promo produk</small>
+        <b>${active && p.promo_price ? rupiah(p.promo_price) : "Tidak aktif"}</b>
+      </div>
+      <button
+        type="button"
+        class="promo-toggle ${active?"active":""}"
+        data-promo="${esc(p.id)}">
+        ${active?"ON":"OFF"}
+      </button>
+    </div>
+  `;
+}
+
+/* Tambahkan kontrol promo ke daftar Owner */
+const oldRenderOwner=window.renderOwner;
+
+if(typeof oldRenderOwner==="function"){
+  window.renderOwner=function(){
+    oldRenderOwner();
+
+    const box=document.getElementById("ownerProducts");
+    if(!box)return;
+
+    box.querySelectorAll(".owner-product").forEach(row=>{
+      const del=row.querySelector("[data-del]");
+      if(!del)return;
+
+      const id=del.dataset.del;
+      const p=db.products.find(x=>x.id===id);
+      if(!p)return;
+
+      const control=document.createElement("div");
+      control.innerHTML=renderPromoControl(p);
+      row.appendChild(control.firstElementChild);
+    });
+
+    box.querySelectorAll("[data-promo]").forEach(btn=>{
+      btn.onclick=()=>toggleProductPromo(btn.dataset.promo);
+    });
+  };
+}
+
+
