@@ -596,7 +596,12 @@ go("home");renderAll();
 
 /* Music player */
 const musicAudio=document.getElementById("musicAudio"),musicPlayer=document.querySelector(".music-player"),muteBtn=document.getElementById("muteBtn"),playBtn=document.getElementById("playBtn"),nextBtn=document.getElementById("nextBtn");
-const tracks=[{name:"Godtazte",src:"assets/godtazte.mp3"},{name:"Raavfy",src:"assets/raavfy.mp3"}];let trackIndex=0;
+const tracks=[
+  {name:"Godtazte",src:"assets/godtazte.mp3"},
+  {name:"Raavfy",src:"assets/raavfy.mp3"},
+  {name:"Lagu 3",src:"assets/lagu3.mp3"},
+  {name:"Lagu 4",src:"assets/lagu4.mp3"}
+];let trackIndex=0;
 musicAudio.src=tracks[0].src;musicAudio.volume=.75;
 function updateMusicUI(){const playing=!musicAudio.paused;musicPlayer.classList.toggle("playing",playing);playBtn.textContent=playing?"Ⅱ":"▶";muteBtn.textContent=musicAudio.muted?"🔇":"🔊";musicPlayer.title=tracks[trackIndex].name}
 async function playMusic(){try{await musicAudio.play()}catch(e){}updateMusicUI()}
