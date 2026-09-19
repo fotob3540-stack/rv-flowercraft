@@ -6,6 +6,106 @@
 <meta name="theme-color" content="#eef5fb">
 <title>RV FLOWERCRAFT V20</title>
 <link rel="stylesheet" href="style.css">
+
+<style id="rv-game-style">
+.flower-game{
+  background:rgba(255,255,255,.85);
+  border-radius:25px;
+  padding:18px;
+  box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.game-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.game-top div{
+  flex:1;
+  text-align:center;
+  background:#f8f8f8;
+  border-radius:15px;
+  padding:10px;
+}
+
+.game-top small{
+  display:block;
+  color:#888;
+  font-size:10px;
+}
+
+.game-top strong{
+  display:block;
+  font-size:22px;
+  margin-top:3px;
+}
+
+.game-area{
+  position:relative;
+  height:330px;
+  overflow:hidden;
+  border-radius:20px;
+  background:linear-gradient(180deg,#f7fcff,#fff5fa);
+  border:2px solid #eee;
+  margin-bottom:15px;
+}
+
+.game-start-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  font-size:45px;
+}
+
+.game-start-text b{
+  font-size:20px;
+  color:#444;
+  margin-top:8px;
+}
+
+.game-start-text small{
+  font-size:13px;
+  color:#777;
+  margin-top:5px;
+}
+
+.game-flower{
+  position:absolute;
+  border:0;
+  background:transparent;
+  font-size:42px;
+  padding:5px;
+  cursor:pointer;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  animation:rvFlowerPop .18s ease;
+}
+
+@keyframes rvFlowerPop{
+  from{
+    transform:scale(.4);
+    opacity:0;
+  }
+  to{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+.game-message{
+  text-align:center;
+  color:#777;
+  font-size:13px;
+  margin:12px 0 0;
+}
+</style>
+
 </head>
 <body>
 <div id="siteBackground" aria-hidden="true"></div>
@@ -62,6 +162,51 @@
   </div>
   <div id="productGrid" class="product-grid"></div>
 </section>
+
+<section class="page" id="game">
+
+  <div class="section-head top">
+    <div>
+      <small class="label">MINI GAME</small>
+      <h2>🎮 Tangkap Bunga</h2>
+    </div>
+    <span id="gameScore">0 Poin</span>
+  </div>
+
+  <div class="flower-game">
+
+    <div class="game-top">
+      <div>
+        <small>SKOR</small>
+        <strong id="scoreValue">0</strong>
+      </div>
+
+      <div>
+        <small>WAKTU</small>
+        <strong id="timeValue">30</strong>
+      </div>
+    </div>
+
+    <div id="gameArea" class="game-area">
+      <div class="game-start-text">
+        🌸
+        <b>Siap bermain?</b>
+        <small>Tangkap bunga sebanyak mungkin!</small>
+      </div>
+    </div>
+
+    <button class="pill" id="startGameBtn" type="button">
+      🎮 Mulai Game
+    </button>
+
+    <p id="gameMessage" class="game-message">
+      Tangkap bunga sebanyak mungkin! 🌷
+    </p>
+
+  </div>
+
+</section>
+
 <section class="page" id="prayer">
   <div class="section-head top"><div><small class="label">IBADAH</small><h2>Waktu Salat</h2></div><span>Riau • WIB</span></div>
   <div class="prayer-card">
@@ -218,7 +363,12 @@
 <nav class="bottom">
   <button class="nav active" data-page="home"><i>⌂</i><span>Home</span></button>
   <button class="nav" data-page="products"><i>✿</i><span>Katalog</span></button>
-  <button class="nav nav-prayer" data-page="prayer"><i>🕌</i><span>Salat</span></button>
+  
+<button class="nav" data-page="game">
+  <i>🎮</i><span>Game</span>
+</button>
+
+<button class="nav nav-prayer" data-page="prayer"><i>🕌</i><span>Salat</span></button>
   <button class="nav" data-page="profile"><i>♡</i><span>Toko</span></button>
 </nav>
 </div>

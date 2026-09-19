@@ -1120,3 +1120,163 @@ if(typeof oldBindWaButtons==="function"){
   bindCustomButtons(document);
 }
 
+
+
+/* =================================
+   RV FLOWERCRAFT - MINI GAME
+   TANGKAP BUNGA
+================================= */
+
+(function(){
+
+  let rvGameRunning = false;
+  let rvScore = 0;
+  let rvTime = 30;
+  let rvTimer = null;
+
+  function el(id){
+    return document.getElementById(id);
+  }
+
+  function updateGame(){
+    if(el("scoreValue"))
+      el("scoreValue").textContent = rvScore;
+
+    if(el("timeValue"))
+      el("timeValue").textContent = rvTime;
+
+    if(el("gameScore"))
+      el("gameScore").textContent = rvScore + " Poin";
+  }
+
+  function spawnFlower(){
+
+    if(!rvGameRunning) return;
+
+    const area = el("gameArea");
+    if(!area) return;
+
+    area.querySelectorAll(".game-flower").forEach(x => x.remove());
+
+    const flower = document.createElement("button");
+
+    flower.type = "button";
+    flower.className = "game-flower";
+
+    const list = [
+      "🌸",
+      "🌷",
+      "🌹",
+      "🌻",
+      "🌺",
+      "💐"
+    ];
+
+    flower.textContent =
+      list[Math.floor(Math.random() * list.length)];
+
+    const maxX = Math.max(0, area.clientWidth - 65);
+    const maxY = Math.max(0, area.clientHeight - 65);
+
+    flower.style.left = Math.random() * maxX + "px";
+    flower.style.top = Math.random() * maxY + "px";
+
+    flower.onclick = function(e){
+
+      e.stopPropagation();
+
+      if(!rvGameRunning) return;
+
+      rvScore++;
+      updateGame();
+
+      flower.remove();
+
+      spawnFlower();
+    };
+
+    area.appendChild(flower);
+  }
+
+  function endGame(){
+
+    rvGameRunning = false;
+
+    clearInterval(rvTimer);
+    rvTimer = null;
+
+    const area = el("gameArea");
+
+    if(area){
+
+      area.querySelectorAll(".game-flower")
+        .forEach(x => x.remove());
+
+      area.innerHTML = `
+        <div class="game-start-text">
+          🏆
+          <b>Game selesai!</b>
+          <small>Skor kamu: ${rvScore} poin</small>
+        </div>
+      `;
+    }
+
+    if(el("gameMessage")){
+      el("gameMessage").textContent =
+        "Mantap! Coba lagi untuk memecahkan skor kamu 🌸";
+    }
+
+    if(el("startGameBtn")){
+      el("startGameBtn").textContent = "🔄 Main Lagi";
+    }
+  }
+
+  function startGame(){
+
+    const area = el("gameArea");
+    if(!area) return;
+
+    clearInterval(rvTimer);
+
+    rvGameRunning = true;
+    rvScore = 0;
+    rvTime = 30;
+
+    updateGame();
+
+    area.innerHTML = "";
+
+    if(el("gameMessage")){
+      el("gameMessage").textContent =
+        "Cepat tangkap bunganya! 🌷";
+    }
+
+    if(el("startGameBtn")){
+      el("startGameBtn").textContent =
+        "🎮 Sedang Bermain...";
+    }
+
+    spawnFlower();
+
+    rvTimer = setInterval(function(){
+
+      rvTime--;
+
+      updateGame();
+
+      if(rvTime <= 0){
+        endGame();
+      }
+
+    },1000);
+  }
+
+  document.addEventListener("click", function(e){
+
+    if(e.target.closest("#startGameBtn")){
+      startGame();
+    }
+
+  });
+
+})();
