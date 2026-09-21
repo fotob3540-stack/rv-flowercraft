@@ -2407,3 +2407,179 @@ body.theme-starry-night *::after {
   .cinematic-particle, .cinematic-line { animation: none !important; display: none; }
   .star.twinkle, .star.twinkle-slow, .star.twinkle-fast { animation: none !important; opacity: 0.4; }
 }
+
+/* RV FLOWERCRAFT - WEATHER */
+
+.weather-card{
+  background:rgba(255,255,255,.88);
+  border-radius:25px;
+  padding:20px;
+  box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.weather-location{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.weather-location > span{
+  font-size:28px;
+}
+
+.weather-location small,
+.weather-main small,
+.weather-info-grid small{
+  display:block;
+  font-size:10px;
+  color:#888;
+  letter-spacing:.8px;
+}
+
+.weather-location strong{
+  display:block;
+  margin-top:3px;
+}
+
+.weather-main{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#f7fbff;
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:15px;
+}
+
+.weather-main > div:first-child strong{
+  display:block;
+  font-size:42px;
+  line-height:1;
+  margin:5px 0;
+}
+
+.weather-main > div:first-child span{
+  color:#666;
+  font-size:13px;
+}
+
+.weather-temp strong{
+  font-size:30px;
+}
+
+.weather-info-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.weather-info-grid > div{
+  background:#fafafa;
+  border-radius:16px;
+  padding:14px;
+}
+
+.weather-info-grid strong{
+  display:block;
+  margin-top:5px;
+  font-size:15px;
+}
+
+#weatherUpdated{
+  margin:15px 2px 0;
+  color:#888;
+  font-size:12px;
+  text-align:center;
+}
+
+
+.weather-select{
+  margin-top:8px;
+  width:100%;
+  max-width:260px;
+  padding:10px 12px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  background:#fff;
+  color:#333;
+  font:inherit;
+  outline:none;
+}
+
+.weather-select:focus{
+  border-color:#aaa;
+}
+
+
+/* =========================================================
+   WEATHER DARK GLASS — RV FLOWERCRAFT
+   ========================================================= */
+
+body.theme-dark .weather-card,
+body.dark-mode .weather-card,
+.theme-dark .weather-card,
+.dark-mode .weather-card{
+  background:rgba(0,0,0,.58) !important;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:
+    0 18px 50px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  color:#fff;
+}
+
+body.theme-dark .weather-main,
+body.dark-mode .weather-main,
+.theme-dark .weather-main,
+.dark-mode .weather-main{
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+body.theme-dark .weather-info-grid > div,
+body.dark-mode .weather-info-grid > div,
+.theme-dark .weather-info-grid > div,
+.dark-mode .weather-info-grid > div{
+  background:rgba(255,255,255,.05) !important;
+  border:1px solid rgba(255,255,255,.07);
+}
+
+body.theme-dark .weather-card small,
+body.dark-mode .weather-card small,
+.theme-dark .weather-card small,
+.dark-mode .weather-card small{
+  color:rgba(255,255,255,.58);
+}
+
+body.theme-dark .weather-card strong,
+body.dark-mode .weather-card strong,
+.theme-dark .weather-card strong,
+.dark-mode .weather-card strong{
+  color:#fff;
+}
+
+body.theme-dark .weather-main > div:first-child span,
+body.dark-mode .weather-main > div:first-child span,
+.theme-dark .weather-main > div:first-child span,
+.dark-mode .weather-main > div:first-child span{
+  color:rgba(255,255,255,.7);
+}
+
+body.theme-dark #weatherUpdated,
+body.dark-mode #weatherUpdated,
+.theme-dark #weatherUpdated,
+.dark-mode #weatherUpdated{
+  color:rgba(255,255,255,.55);
+}
+
+body.theme-dark .weather-select,
+body.dark-mode .weather-select,
+.theme-dark .weather-select,
+.dark-mode .weather-select{
+  background:rgba(0,0,0,.7) !important;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.15);
+}
+

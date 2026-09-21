@@ -219,6 +219,77 @@
     <small class="prayer-note">Jadwal mengikuti data Riau September 2026 yang disediakan. Zona waktu WIB (UTC+7).</small>
   </div>
 </section>
+
+<section class="page" id="weather">
+  <div class="section-head top">
+    <div>
+      <small class="label">CUACA & UDARA</small>
+      <h2>Pekanbaru</h2>
+    </div>
+    <span>Riau • WIB</span>
+  </div>
+
+  <div class="weather-card">
+    <div class="weather-location">
+      <span>📍</span>
+      <div>
+        <small>LOKASI</small>
+        <strong id="weatherLocation">Pekanbaru, Riau</strong>
+        <select id="weatherRegion" class="weather-select" aria-label="Pilih wilayah Riau">
+          <option value="Pekanbaru|Riau">Pekanbaru</option>
+          <option value="Dumai|Riau">Dumai</option>
+          <option value="Bengkalis|Riau">Bengkalis</option>
+          <option value="Siak|Riau">Siak</option>
+          <option value="Pelalawan|Riau">Pelalawan</option>
+          <option value="Kampar|Riau">Kampar</option>
+          <option value="Rokan Hulu|Riau">Rokan Hulu</option>
+          <option value="Rokan Hilir|Riau">Rokan Hilir</option>
+          <option value="Indragiri Hulu|Riau">Indragiri Hulu</option>
+          <option value="Indragiri Hilir|Riau">Indragiri Hilir</option>
+          <option value="Kuantan Singingi|Riau">Kuantan Singingi</option>
+          <option value="Kepulauan Meranti|Riau">Kepulauan Meranti</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="weather-main">
+      <div>
+        <small>AQI</small>
+        <strong id="weatherAQI">--</strong>
+        <span id="weatherStatus">Memuat...</span>
+      </div>
+
+      <div class="weather-temp">
+        <strong id="weatherTemp">--°C</strong>
+      </div>
+    </div>
+
+    <div class="weather-info-grid">
+      <div>
+        <small>PM2.5</small>
+        <strong id="weatherPM25">-- µg/m³</strong>
+      </div>
+
+      <div>
+        <small>KELEMBAPAN</small>
+        <strong id="weatherHumidity">--%</strong>
+      </div>
+
+      <div>
+        <small>ANGIN</small>
+        <strong id="weatherWind">-- km/j</strong>
+      </div>
+
+      <div>
+        <small>TEKANAN</small>
+        <strong id="weatherPressure">-- hPa</strong>
+      </div>
+    </div>
+
+    <p id="weatherUpdated">Memuat data IQAir...</p>
+  </div>
+</section>
+
 <section class="page" id="profile">
   <div class="section-head top"><div><small class="label">TOKO</small><h2 id="profileTitle">RV FLOWERCRAFT</h2></div></div>
   <div class="profile-card">
@@ -365,6 +436,7 @@
   <button class="nav active" data-page="home"><i>⌂</i><span>Home</span></button>
   <button class="nav" data-page="products"><i>✿</i><span>Katalog</span></button>
   <button class="nav nav-prayer" data-page="prayer"><i>🕌</i><span>Salat</span></button>
+  <button class="nav" data-page="weather"><i>☁</i><span>Cuaca</span></button>
   <button class="nav" data-page="profile"><i>♡</i><span>Toko</span></button>
 </nav>
 </div>

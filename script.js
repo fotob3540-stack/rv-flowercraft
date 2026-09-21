@@ -1294,6 +1294,401 @@ if(typeof oldBindWaButtons==="function"){
   bindCustomButtons(document);
 }
 
+/* =========================================================
+   RV FLOWERCRAFT — IQAIR + OPEN-METEO
+   AQI/PM2.5 = IQAir
+   Cuaca = Open-Meteo
+   ========================================================= */
+
+const IQAIR_API_KEY = "d7641814-5901-4969-9afd-b262a7ceae70";
+
+let currentWeatherCity = "Pekanbaru";
+let currentWeatherState = "Riau";
+
+/* Koordinat wilayah Riau */
+const weatherRegions = {
+
+  "Pekanbaru|Riau": {
+    city: "Pekanbaru",
+    lat: 0.5071,
+    lon: 101.4478
+  },
+
+  "Dumai|Riau": {
+    city: "Dumai",
+    lat: 1.6666,
+    lon: 101.4000
+  },
+
+  "Bengkalis|Riau": {
+    city: "Bengkalis",
+    lat: 1.4820,
+    lon: 102.0790
+  },
+
+  "Siak|Riau": {
+    city: "Siak",
+    lat: 0.7930,
+    lon: 102.0440
+  },
+
+  "Pelalawan|Riau": {
+    city: "Pelalawan",
+    lat: 0.4414,
+    lon: 101.8590
+  },
+
+  "Kampar|Riau": {
+    city: "Kampar",
+    lat: 0.2340,
+    lon: 101.2180
+  },
+
+  "Rokan Hulu|Riau": {
+    city: "Rokan Hulu",
+    lat: 0.8833,
+    lon: 100.4500
+  },
+
+  "Rokan Hilir|Riau": {
+    city: "Rokan Hilir",
+    lat: 2.1500,
+    lon: 100.8167
+  },
+
+  "Indragiri Hulu|Riau": {
+    city: "Indragiri Hulu",
+    lat: -0.5500,
+    lon: 102.3167
+  },
+
+  "Indragiri Hilir|Riau": {
+    city: "Indragiri Hilir",
+    lat: -0.3333,
+    lon: 103.1667
+  },
+
+  "Kuantan Singingi|Riau": {
+    city: "Kuantan Singingi",
+    lat: -0.5250,
+    lon: 101.5500
+  },
+
+  "Kepulauan Meranti|Riau": {
+    city: "Kepulauan Meranti",
+    lat: 0.8667,
+    lon: 102.7000
+  }
+
+};
 
 
+/* =========================
+   STATUS AQI IQAIR
+   ========================= */
+
+function getIQAirStatus(aqi){
+
+  if(aqi == null)
+    return "Tidak tersedia";
+
+  if(aqi <= 50)
+    return "Baik";
+
+  if(aqi <= 100)
+    return "Sedang";
+
+  if(aqi <= 150)
+    return "Tidak sehat bagi kelompok sensitif";
+
+  if(aqi <= 200)
+    return "Tidak sehat";
+
+  if(aqi <= 300)
+    return "Sangat tidak sehat";
+
+  return "Berbahaya";
+}
+
+
+/* =========================
+   OPEN-METEO
+   ========================= */
+
+async function loadOpenMeteoWeather(){
+
+  const regionKey =
+    currentWeatherCity + "|" + currentWeatherState;
+
+  const region =
+    weatherRegions[regionKey];
+
+  if(!region)
+    throw new Error("Wilayah tidak ditemukan");
+
+  const url =
+    "https://api.open-meteo.com/v1/forecast" +
+    "?latitude=" + region.lat +
+    "&longitude=" + region.lon +
+    "&current=temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,weather_code" +
+    "&wind_speed_unit=kmh" +
+    "&timezone=Asia%2FJakarta";
+
+  const response = await fetch(url);
+
+  if(!response.ok)
+    throw new Error("Open-Meteo gagal");
+
+  const data = await response.json();
+
+  const current =
+    data.current || {};
+
+  return current;
+}
+
+
+/* =========================
+   IQAIR
+   ========================= */
+
+async function loadIQAirWeather(){
+
+  const aqiEl =
+    document.getElementById("weatherAQI");
+
+  if(!aqiEl)
+    return;
+
+  const pm25El =
+    document.getElementById("weatherPM25");
+
+  const tempEl =
+    document.getElementById("weatherTemp");
+
+  const statusEl =
+    document.getElementById("weatherStatus");
+
+  const humidityEl =
+    document.getElementById("weatherHumidity");
+
+  const windEl =
+    document.getElementById("weatherWind");
+
+  const pressureEl =
+    document.getElementById("weatherPressure");
+
+  const updatedEl =
+    document.getElementById("weatherUpdated");
+
+  const locationEl =
+    document.getElementById("weatherLocation");
+
+
+  /* Nama lokasi */
+
+  if(locationEl){
+
+    locationEl.textContent =
+      currentWeatherCity +
+      ", " +
+      currentWeatherState;
+
+  }
+
+
+  /* Reset */
+
+  aqiEl.textContent = "--";
+  pm25El.textContent = "-- µg/m³";
+  tempEl.textContent = "--°C";
+  humidityEl.textContent = "--%";
+  windEl.textContent = "-- km/j";
+  pressureEl.textContent = "-- hPa";
+  statusEl.textContent = "Memuat...";
+  updatedEl.textContent = "Mengambil data...";
+
+
+  /* =========================
+     CUACA OPEN-METEO
+     ========================= */
+
+  try{
+
+    const weather =
+      await loadOpenMeteoWeather();
+
+    if(weather.temperature_2m !== undefined){
+
+      tempEl.textContent =
+        weather.temperature_2m +
+        "°C";
+
+    }
+
+    if(weather.relative_humidity_2m !== undefined){
+
+      humidityEl.textContent =
+        weather.relative_humidity_2m +
+        "%";
+
+    }
+
+    if(weather.wind_speed_10m !== undefined){
+
+      windEl.textContent =
+        weather.wind_speed_10m +
+        " km/j";
+
+    }
+
+    if(weather.pressure_msl !== undefined){
+
+      pressureEl.textContent =
+        Math.round(weather.pressure_msl) +
+        " hPa";
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "Open-Meteo Error:",
+      error
+    );
+
+  }
+
+
+  /* =========================
+     AQI IQAIR
+     ========================= */
+
+  try{
+
+    const url =
+      "https://api.airvisual.com/v2/city" +
+      "?city=" +
+      encodeURIComponent(currentWeatherCity) +
+      "&state=" +
+      encodeURIComponent(currentWeatherState) +
+      "&country=Indonesia" +
+      "&key=" +
+      encodeURIComponent(IQAIR_API_KEY);
+
+    const response =
+      await fetch(url);
+
+    const result =
+      await response.json();
+
+    if(
+      response.ok &&
+      result.status === "success"
+    ){
+
+      const pollution =
+        result.data?.current?.pollution || {};
+
+      const aqi =
+        pollution.aqius;
+
+      const pm25 =
+        pollution.p2;
+
+      if(aqi !== undefined){
+
+        aqiEl.textContent =
+          aqi;
+
+        statusEl.textContent =
+          getIQAirStatus(aqi);
+
+      }
+
+      if(pm25 !== undefined){
+
+        pm25El.textContent =
+          pm25 +
+          " µg/m³";
+
+      }
+
+      updatedEl.textContent =
+        "Cuaca: Open-Meteo • AQI: IQAir";
+
+    }else{
+
+      aqiEl.textContent = "--";
+      pm25El.textContent = "-- µg/m³";
+      statusEl.textContent =
+        "AQI tidak tersedia";
+
+      updatedEl.textContent =
+        "Cuaca tersedia • AQI IQAir tidak tersedia";
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "IQAir Error:",
+      error
+    );
+
+    aqiEl.textContent = "--";
+    pm25El.textContent = "-- µg/m³";
+    statusEl.textContent =
+      "AQI tidak tersedia";
+
+    updatedEl.textContent =
+      "Cuaca tersedia • AQI IQAir tidak tersedia";
+
+  }
+
+}
+
+
+/* =========================
+   PILIH WILAYAH
+   ========================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    const select =
+      document.getElementById("weatherRegion");
+
+    if(select){
+
+      select.addEventListener(
+        "change",
+        function(){
+
+          const parts =
+            this.value.split("|");
+
+          currentWeatherCity =
+            parts[0];
+
+          currentWeatherState =
+            parts[1];
+
+          loadIQAirWeather();
+
+        }
+      );
+
+    }
+
+    loadIQAirWeather();
+
+    setInterval(
+      loadIQAirWeather,
+      10 * 60 * 1000
+    );
+
+  }
+);
 
