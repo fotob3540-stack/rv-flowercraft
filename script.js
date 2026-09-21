@@ -594,21 +594,190 @@ function renderAll(){
 }
 go("home");renderAll();
 
-/* Music player */
-const musicAudio=document.getElementById("musicAudio"),musicPlayer=document.querySelector(".music-player"),muteBtn=document.getElementById("muteBtn"),playBtn=document.getElementById("playBtn"),nextBtn=document.getElementById("nextBtn");
+/* Music player + VIDEO BACKGROUND */
+
+const musicAudio=document.getElementById("musicAudio"),
+      musicPlayer=document.querySelector(".music-player"),
+      muteBtn=document.getElementById("muteBtn"),
+      playBtn=document.getElementById("playBtn"),
+      nextBtn=document.getElementById("nextBtn"),
+      musicBgVideo=document.getElementById("musicBgVideo");
+
 const tracks=[
   {name:"Godtazte",src:"assets/godtazte.mp3"},
   {name:"Raavfy",src:"assets/raavfy.mp3"},
   {name:"Lagu 3",src:"assets/lagu3.mp3"},
   {name:"Lagu 4",src:"assets/lagu4.mp3"}
-];let trackIndex=0;
-musicAudio.src=tracks[0].src;musicAudio.volume=.75;
-function updateMusicUI(){const playing=!musicAudio.paused;musicPlayer.classList.toggle("playing",playing);playBtn.textContent=playing?"Ⅱ":"▶";muteBtn.textContent=musicAudio.muted?"🔇":"🔊";musicPlayer.title=tracks[trackIndex].name}
-async function playMusic(){try{await musicAudio.play()}catch(e){}updateMusicUI()}
-playBtn.onclick=()=>musicAudio.paused?playMusic():(musicAudio.pause(),updateMusicUI());
-muteBtn.onclick=()=>{musicAudio.muted=!musicAudio.muted;updateMusicUI()};
-nextBtn.onclick=()=>{trackIndex=(trackIndex+1)%tracks.length;musicAudio.src=tracks[trackIndex].src;playMusic()};
-musicAudio.onended=()=>{trackIndex=(trackIndex+1)%tracks.length;musicAudio.src=tracks[trackIndex].src;playMusic()};
+];
+
+let trackIndex=0;
+
+musicAudio.src=tracks[0].src;
+musicAudio.volume=.75;
+
+
+/* =========================================
+    VIDEO THEME & STARRY NIGHT
+    Track 0-1 = normal (theme-white)
+    Track 2-3 = starry night theme
+========================================= */
+
+function createStars(){
+  const container = document.getElementById("star-container");
+  if(!container) return;
+  container.innerHTML = "";
+  const starCount = 40;
+  for(let i = 0; i < starCount; i++){
+    const star = document.createElement("div");
+    star.className = "star";
+    const sizeRand = Math.random();
+    if(sizeRand < 0.3) star.classList.add("size-xs");
+    else if(sizeRand < 0.6) star.classList.add("size-sm");
+    else if(sizeRand < 0.85) star.classList.add("size-md");
+    else star.classList.add("size-lg");
+    const twinkleType = Math.random();
+    if(twinkleType < 0.4) star.classList.add("twinkle");
+    else if(twinkleType < 0.7) star.classList.add("twinkle-slow");
+    else star.classList.add("twinkle-fast");
+    star.style.left = (Math.random() * 100) + "%";
+    star.style.top = (Math.random() * 100) + "%";
+    star.style.animationDuration = (2 + Math.random() * 4) + "s";
+    star.style.animationDelay = (Math.random() * 5) + "s";
+    container.appendChild(star);
+  }
+  container.classList.add("visible");
+}
+
+function removeStars(){
+  const container = document.getElementById("star-container");
+  if(container) container.classList.remove("visible");
+}
+
+function updateMusicTheme(){
+  const isStarry = trackIndex >= 2;
+  const wasStarry = document.body.classList.contains("theme-starry-night");
+  document.body.classList.remove("theme-white", "theme-dark", "theme-starry-night", "music-video");
+  if(isStarry){
+    document.body.classList.add("theme-starry-night");
+    if(!wasStarry) createStars();
+  }else{
+    document.body.classList.add("theme-white");
+    removeStars();
+  }
+  if(isStarry){
+    if(musicBgVideo){
+      musicBgVideo.currentTime = 0;
+      const playVideo = () => {
+        musicBgVideo.play().catch(()=>{});
+      };
+      if(musicBgVideo.readyState >= 2){
+        playVideo();
+      }else{
+        musicBgVideo.addEventListener("canplay", playVideo, {once:true});
+      }
+    }
+  }else{
+    if(musicBgVideo){
+      musicBgVideo.pause();
+      musicBgVideo.currentTime = 0;
+    }
+  }
+}
+
+
+function updateMusicUI(){
+
+  const playing=!musicAudio.paused;
+
+  musicPlayer.classList.toggle(
+    "playing",
+    playing
+  );
+
+  playBtn.textContent=
+    playing ? "Ⅱ" : "▶";
+
+  muteBtn.textContent=
+    musicAudio.muted ? "🔇" : "🔊";
+
+  musicPlayer.title=
+    tracks[trackIndex].name;
+
+  updateMusicTheme();
+}
+
+
+async function playMusic(){
+
+  try{
+    await musicAudio.play();
+  }catch(e){}
+
+  updateMusicUI();
+}
+
+
+playBtn.onclick=()=>{
+
+  if(musicAudio.paused){
+
+    playMusic();
+
+  }else{
+
+    musicAudio.pause();
+
+    updateMusicUI();
+
+  }
+
+};
+
+
+muteBtn.onclick=()=>{
+
+  musicAudio.muted=
+    !musicAudio.muted;
+
+  updateMusicUI();
+
+};
+
+
+nextBtn.onclick=()=>{
+
+  trackIndex=
+    (trackIndex+1)%tracks.length;
+
+  musicAudio.src=
+    tracks[trackIndex].src;
+
+  musicAudio.load();
+
+  updateMusicTheme();
+
+  playMusic();
+
+};
+
+
+musicAudio.onended=()=>{
+
+  trackIndex=
+    (trackIndex+1)%tracks.length;
+
+  musicAudio.src=
+    tracks[trackIndex].src;
+
+  musicAudio.load();
+
+  updateMusicTheme();
+
+  playMusic();
+
+};
+
+
 updateMusicUI();
 
 
@@ -1127,161 +1296,4 @@ if(typeof oldBindWaButtons==="function"){
 
 
 
-/* =================================
-   RV FLOWERCRAFT - MINI GAME
-   TANGKAP BUNGA
-================================= */
 
-(function(){
-
-  let rvGameRunning = false;
-  let rvScore = 0;
-  let rvTime = 30;
-  let rvTimer = null;
-
-  function el(id){
-    return document.getElementById(id);
-  }
-
-  function updateGame(){
-    if(el("scoreValue"))
-      el("scoreValue").textContent = rvScore;
-
-    if(el("timeValue"))
-      el("timeValue").textContent = rvTime;
-
-    if(el("gameScore"))
-      el("gameScore").textContent = rvScore + " Poin";
-  }
-
-  function spawnFlower(){
-
-    if(!rvGameRunning) return;
-
-    const area = el("gameArea");
-    if(!area) return;
-
-    area.querySelectorAll(".game-flower").forEach(x => x.remove());
-
-    const flower = document.createElement("button");
-
-    flower.type = "button";
-    flower.className = "game-flower";
-
-    const list = [
-      "🌸",
-      "🌷",
-      "🌹",
-      "🌻",
-      "🌺",
-      "💐"
-    ];
-
-    flower.textContent =
-      list[Math.floor(Math.random() * list.length)];
-
-    const maxX = Math.max(0, area.clientWidth - 65);
-    const maxY = Math.max(0, area.clientHeight - 65);
-
-    flower.style.left = Math.random() * maxX + "px";
-    flower.style.top = Math.random() * maxY + "px";
-
-    flower.onclick = function(e){
-
-      e.stopPropagation();
-
-      if(!rvGameRunning) return;
-
-      rvScore++;
-      updateGame();
-
-      flower.remove();
-
-      spawnFlower();
-    };
-
-    area.appendChild(flower);
-  }
-
-  function endGame(){
-
-    rvGameRunning = false;
-
-    clearInterval(rvTimer);
-    rvTimer = null;
-
-    const area = el("gameArea");
-
-    if(area){
-
-      area.querySelectorAll(".game-flower")
-        .forEach(x => x.remove());
-
-      area.innerHTML = `
-        <div class="game-start-text">
-          🏆
-          <b>Game selesai!</b>
-          <small>Skor kamu: ${rvScore} poin</small>
-        </div>
-      `;
-    }
-
-    if(el("gameMessage")){
-      el("gameMessage").textContent =
-        "Mantap! Coba lagi untuk memecahkan skor kamu 🌸";
-    }
-
-    if(el("startGameBtn")){
-      el("startGameBtn").textContent = "🔄 Main Lagi";
-    }
-  }
-
-  function startGame(){
-
-    const area = el("gameArea");
-    if(!area) return;
-
-    clearInterval(rvTimer);
-
-    rvGameRunning = true;
-    rvScore = 0;
-    rvTime = 30;
-
-    updateGame();
-
-    area.innerHTML = "";
-
-    if(el("gameMessage")){
-      el("gameMessage").textContent =
-        "Cepat tangkap bunganya! 🌷";
-    }
-
-    if(el("startGameBtn")){
-      el("startGameBtn").textContent =
-        "🎮 Sedang Bermain...";
-    }
-
-    spawnFlower();
-
-    rvTimer = setInterval(function(){
-
-      rvTime--;
-
-      updateGame();
-
-      if(rvTime <= 0){
-        endGame();
-      }
-
-    },1000);
-  }
-
-  document.addEventListener("click", function(e){
-
-    if(e.target.closest("#startGameBtn")){
-      startGame();
-    }
-
-  });
-
-})();

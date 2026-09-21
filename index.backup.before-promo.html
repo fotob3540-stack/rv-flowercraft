@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eef5fb">
+<title>RV FLOWERCRAFT V20</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="siteBackground" aria-hidden="true"></div>
+<div id="siteBackgroundShade"></div>
+<div id="loader">
+  <img src="assets/loading.jpg" id="loadImage" alt="RV FLOWERCRAFT">
+  <button id="skip">Lewati</button>
+</div>
+<div class="shell">
+<header class="header">
+  <button class="round-btn" id="menuBtn" aria-label="Profil">☰</button>
+  <div class="brand"><div><b>RV FLOWERCRAFT</b><small>FLOWER & BOUQUET SHOP</small></div></div>
+  <div class="header-actions">
+    <div class="music-player" aria-label="Pemutar musik">
+      <div class="music-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <button class="music-btn" id="muteBtn" aria-label="Suara">🔊</button>
+      <button class="music-btn" id="playBtn" aria-label="Putar">▶</button>
+      <button class="music-btn" id="nextBtn" aria-label="Berikutnya">▶|</button>
+      <audio id="musicAudio" preload="auto"></audio>
+    </div>
+  </div>
+</header>
+<main>
+<section class="page active" id="home">
+  <div class="welcome">
+    <div><small class="label">WELCOME</small><h1>Selamat datang di<br><strong>RV FLOWERCRAFT</strong></h1>
+    <p id="storeWelcome">Buket dan bunga pilihan untuk menemani momen spesial kamu.</p></div>
+    <button class="pill" data-page="products">Lihat katalog →</button>
+  </div>
+  <div class="banner">
+    <video autoplay muted loop playsinline><source src="assets/home-eyes.mp4" type="video/mp4"></video>
+    <div class="banner-overlay"><span>RV FLOWERCRAFT</span><small>YOUR FLOWER, YOUR MOMENT</small></div>
+  </div>
+  <div class="quick quick-two">
+    <button class="quick-card" data-page="products"><i>✿</i><span><b>Katalog</b><small>Lihat bunga</small></span><em>›</em></button>
+    <button class="quick-card" data-page="profile"><i>♡</i><span><b>Tentang toko</b><small>Info & kontak</small></span><em>›</em></button>
+  </div>
+  <div class="section-head"><div><small class="label">KOLEKSI</small><h2>Produk terbaru</h2></div><span id="homeCount">0 produk</span></div>
+  <div id="homeProducts" class="product-grid"></div>
+</section>
+<section class="page" id="products">
+  <div class="section-head top"><div><small class="label">KATALOG</small><h2>Produk bunga</h2></div><span id="productCount">0 produk</span></div>
+  <div class="catalog-search">
+    <span>🔎</span>
+    <input id="productSearch" type="search" placeholder="Cari produk..." autocomplete="off">
+    <button id="clearProductSearch" type="button">×</button>
+  </div>
+
+  <div class="chips">
+    <button class="chip active" data-category="Semua">Semua</button>
+    <button class="chip" data-category="Buket">Buket</button>
+    <button class="chip" data-category="Fresh Flower">Fresh Flower</button>
+    <button class="chip" data-category="Hampers">Hampers</button>
+  </div>
+  <div id="productGrid" class="product-grid"></div>
+</section>
+<section class="page" id="prayer">
+  <div class="section-head top"><div><small class="label">IBADAH</small><h2>Waktu Salat</h2></div><span>Riau • WIB</span></div>
+  <div class="prayer-card">
+    <div class="prayer-top"><div><small>JADWAL SALAT</small><h3 id="prayerLocation">Pekanbaru</h3><p id="prayerDate">Hari ini</p></div><span class="prayer-icon">🕌</span></div>
+    <select id="prayerRegion" class="prayer-select" aria-label="Pilih wilayah Riau"></select>
+    <div class="prayer-now"><small>JAM SEKARANG • MENGIKUTI JAM HP</small><strong id="phoneClock">--:--</strong></div>
+    <div class="prayer-next"><small>SALAT BERIKUTNYA</small><b id="nextPrayerName">—</b><strong id="nextPrayerTime">—</strong></div>
+    <div class="prayer-grid" id="prayerGrid"></div>
+    <small class="prayer-note">Jadwal mengikuti data Riau September 2026 yang disediakan. Zona waktu WIB (UTC+7).</small>
+  </div>
+</section>
+<section class="page" id="profile">
+  <div class="section-head top"><div><small class="label">TOKO</small><h2 id="profileTitle">RV FLOWERCRAFT</h2></div></div>
+  <div class="profile-card">
+    <div class="profile-icon">✿</div>
+    <div><h3 id="profileName">RV FLOWERCRAFT</h3><p id="profileDesc">Buket dan bunga pilihan untuk menemani momen spesial kamu.</p></div>
+  </div>
+  <div class="store-info-card">
+    <div class="store-info-row"><span>📍</span><div><small>ALAMAT TOKO</small><b id="profileAddress">Peranap, Pandan Wangi</b></div></div>
+    <div class="store-info-row"><span>🕒</span><div><small>JAM BUKA</small><b id="profileHours">Setiap hari</b></div></div>
+    <div class="store-info-row"><span>💬</span><div><small>WHATSAPP</small><b id="profilePhone">+6285167605533</b></div></div>
+    <div class="store-info-row"><span>📸</span><div><small>INSTAGRAM</small><b id="profileInstagram">@rv flowercraft</b></div></div>
+  </div>
+  <div class="contact-card">
+    <div><small>HUBUNGI RV FLOWERCRAFT</small><b>Pesan bunga langsung lewat WhatsApp</b></div>
+    <button class="pill" id="profileWaBtn">Chat WA</button>
+  </div>
+  <div class="settings-list">
+    <button id="instagramBtn">📸 <span>Buka Instagram</span><b>›</b></button>
+    <button id="shareBtn">🔗 <span>Bagikan link toko</span><b>›</b></button>
+    <button id="ownerBtn">⚙ <span>Dashboard owner / Kelola katalog</span><b>›</b></button>
+
+<button id="ownerLoginDirectBtn" type="button" onclick="document.getElementById('ownerLoginModal').hidden=false;document.getElementById('ownerPassword').value='';document.getElementById('ownerLoginError').textContent='';">
+  <span>🔐 Login sebagai Owner</span><b>›</b>
+</button>
+  </div>
+</section>
+<section class="page" id="owner">
+  <div class="section-head top"><div><small class="label">OWNER</small><h2>Dashboard toko</h2></div>
+    <button class="outline" data-page="products">Lihat toko</button>
+  </div>
+  <div class="owner-stats">
+    <div><small>Produk</small><b id="statProducts">0</b></div>
+    <div><small>WA Pemilik</small><b id="statPhone">—</b></div>
+  </div>
+  <div class="visitor-card">
+    <div class="visitor-top">
+      <div class="visitor-avatar">●</div>
+      <div class="visitor-title"><small>VISITOR INFORMATION</small><h3>Pengunjung saat ini</h3></div>
+      <span class="online-dot"><i></i> Online</span>
+    </div>
+    <div class="visitor-grid">
+      <div class="visitor-item"><span class="v-icon">🌐</span><div><small>NEGARA</small><b id="visitorCountry">Mendeteksi...</b></div></div>
+      <div class="visitor-item"><span class="v-icon">📱</span><div><small>DEVICE</small><b id="visitorDevice">Mendeteksi...</b></div></div>
+      <div class="visitor-item"><span class="v-icon">🌐</span><div><small>BROWSER</small><b id="visitorBrowser">Mendeteksi...</b></div></div>
+      <div class="visitor-item"><span class="v-icon">📶</span><div><small>STATUS</small><b id="visitorStatus">Online</b></div></div>
+      <div class="visitor-item battery-item"><span class="v-icon">🔋</span><div class="battery-wrap"><small>BATTERY</small><div class="battery-line"><span id="batteryBar"></span></div><b id="visitorBattery">Tidak tersedia</b></div></div>
+      <div class="visitor-item"><span class="v-icon">▣</span><div><small>SCREEN</small><b id="visitorScreen">—</b></div></div>
+    </div>
+    <div class="visitor-note">Informasi perangkat dibaca dari browser pengunjung. Lokasi negara hanya perkiraan.</div>
+  </div>
+  <div class="owner-card">
+    <h3>Tambah katalog</h3>
+    <p>Tambahkan nama, foto, harga, kategori, dan deskripsi. Tombol produk akan langsung membuka chat WhatsApp pemilik.</p>
+    <form id="productForm">
+      <input id="pName" required placeholder="Nama produk, contoh: Buket Bunga Garmolic">
+      <div class="form-row"><input id="pPrice" required type="text" inputmode="numeric" autocomplete="off" placeholder="Harga (Rp), contoh 53.000">
+      <select id="pCategory"><option>Buket</option><option>Fresh Flower</option><option>Hampers</option></select></div>
+      <label class="image-picker">📷 Pilih gambar produk<input id="pImageFile" type="file" accept="image/*" hidden></label>
+      <div id="imagePreview" class="image-preview" hidden></div>
+      <small class="image-help">Foto produk akan tampil di katalog.</small>
+      <textarea id="pDesc" placeholder="Deskripsi singkat produk"></textarea>
+      <button class="pill" type="submit">＋ Tambah produk</button>
+    </form>
+  </div>
+  <div class="owner-card">
+    <h3>Produk tersimpan</h3>
+    <div id="ownerProducts"></div>
+  </div>
+
+<div class="owner-card analytics-owner-card" id="rvAnalyticsPanel">
+  <div class="analytics-header">
+    <div>
+      <small class="label">LIVE ANALYTICS</small>
+      <h3>📊 Statistik Toko</h3>
+    </div>
+    <button type="button" class="analytics-refresh" id="analyticsRefresh">↻</button>
+  </div>
+
+  <div class="analytics-grid">
+    <div class="analytics-box">
+      <span>👥</span>
+      <small>Pengunjung Total</small>
+      <strong id="analyticsVisitors">0</strong>
+    </div>
+
+    <div class="analytics-box">
+      <span>🟢</span>
+      <small>Hari Ini</small>
+      <strong id="analyticsVisitorsToday">0</strong>
+    </div>
+
+    <div class="analytics-box">
+      <span>👁️</span>
+      <small>Produk Dilihat</small>
+      <strong id="analyticsViews">0</strong>
+    </div>
+
+    <div class="analytics-box">
+      <span>🔗</span>
+      <small>Link Ditekan</small>
+      <strong id="analyticsClicks">0</strong>
+    </div>
+
+    <div class="analytics-box">
+      <span>💬</span>
+      <small>WhatsApp</small>
+      <strong id="analyticsWA">0</strong>
+    </div>
+
+    <div class="analytics-box">
+      <span>🛒</span>
+      <small>Order Hari Ini</small>
+      <strong id="analyticsOrders">0</strong>
+    </div>
+  </div>
+
+  <div class="analytics-status">
+    <span class="status-dot"></span>
+    <span>Analytics Online • Supabase</span>
+  </div>
+</div>
+
+  <div class="owner-card">
+    <h3>Pengaturan toko</h3>
+    <form id="storeForm">
+      <input id="sName" placeholder="Nama toko">
+      <input id="sPhone" inputmode="tel" placeholder="WhatsApp pemilik, contoh 628xxxxxxxxxx">
+      <input id="sAddress" placeholder="Alamat toko">
+      <input id="sHours" placeholder="Jam buka">
+      <input id="sInstagram" placeholder="Instagram, contoh @rv flowercraft">
+      <textarea id="sWelcome" placeholder="Deskripsi toko"></textarea>
+      <button class="pill" type="submit">Simpan pengaturan</button>
+    </form>
+    <div class="wa-tip">Gunakan format internasional, misalnya <b>62812xxxxxxx</b>, tanpa tanda + dan tanpa spasi.</div>
+  </div>
+  <div class="owner-card danger-card">
+    <h3>Data toko</h3>
+    <p>Reset hanya menghapus katalog dan pengaturan yang tersimpan di browser ini.</p>
+    <button class="danger-wide" id="resetBtn">↻ Reset data toko</button>
+  </div>
+</section>
+</main>
+<nav class="bottom">
+  <button class="nav active" data-page="home"><i>⌂</i><span>Home</span></button>
+  <button class="nav" data-page="products"><i>✿</i><span>Katalog</span></button>
+  <button class="nav nav-prayer" data-page="prayer"><i>🕌</i><span>Salat</span></button>
+  <button class="nav" data-page="profile"><i>♡</i><span>Toko</span></button>
+</nav>
+</div>
+
+<!-- LOGIN OWNER: sudah ditambahkan di luar .shell -->
+<div id="ownerLoginModal" class="owner-login-modal" hidden>
+  <div class="owner-login-box">
+    <button id="closeOwnerLogin" class="owner-login-close" type="button" aria-label="Tutup">×</button>
+    <small class="label">OWNER</small>
+    <h2>Login Dashboard</h2>
+    <p>Masuk untuk mengelola katalog RV FLOWERCRAFT.</p>
+    <form id="ownerLoginForm">
+      <input id="ownerEmail" type="email" value="mraffiirawan11.10@gmail.com">
+      <input id="ownerPassword" type="password" placeholder="Password Owner" autocomplete="current-password" required>
+      <button class="pill" type="submit">🔐 Masuk Dashboard</button>
+    </form>
+    <p id="ownerLoginError" class="muted"></p>
+  </div>
+</div>
+
+
+<div id="productDetailModal" hidden>
+  <div class="pd-backdrop" id="pdBackdrop"></div>
+
+  <div class="pd-box">
+    <button class="pd-close" id="pdClose">×</button>
+
+    <div class="pd-image-wrap" id="pdImageWrap">
+      <img id="pdImage" alt="Foto produk">
+      <div class="pd-zoom-text">🔍 Tekan foto untuk zoom</div>
+    </div>
+
+    <div class="pd-info">
+      <small id="pdCategory"></small>
+      <h2 id="pdName"></h2>
+      <strong id="pdPrice"></strong>
+      <p id="pdDescription"></p>
+
+      <div class="pd-extra-actions">
+      <button type="button" class="pd-action-btn" id="pdFavorite">♡ Favorit</button>
+      <button type="button" class="pd-action-btn" id="pdShare">🔗 Bagikan</button>
+    </div>
+    <button class="pill" id="pdOrder">
+        💬 Pesan via WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+#productDetailModal{
+  position:fixed;
+  inset:0;
+  z-index:999999;
+}
+
+.pd-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(10px);
+}
+
+.pd-box{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(520px,92%);
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  color:#222;
+  border-radius:25px;
+  box-shadow:0 25px 80px rgba(0,0,0,.45);
+}
+
+.pd-close{
+  position:absolute;
+  right:12px;
+  top:10px;
+  z-index:5;
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:50%;
+  background:rgba(0,0,0,.55);
+  color:#fff;
+  font-size:27px;
+  cursor:pointer;
+}
+
+.pd-image-wrap{
+  position:relative;
+  background:#f5f5f5;
+  min-height:280px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  cursor:zoom-in;
+}
+
+#pdImage{
+  display:block;
+  width:100%;
+  max-height:500px;
+  object-fit:contain;
+  transition:transform .3s ease;
+}
+
+.pd-image-wrap.zoomed{
+  cursor:zoom-out;
+}
+
+.pd-image-wrap.zoomed #pdImage{
+  transform:scale(2);
+}
+
+.pd-zoom-text{
+  position:absolute;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:7px 12px;
+  border-radius:20px;
+  background:rgba(0,0,0,.55);
+  color:white;
+  font-size:11px;
+}
+
+.pd-info{
+  padding:22px;
+}
+
+.pd-info small{
+  color:#888;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+#pdName{
+  margin:7px 0;
+  font-size:25px;
+}
+
+#pdPrice{
+  display:block;
+  color:#d84b88;
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+#pdDescription{
+  color:#666;
+  line-height:1.6;
+  margin-bottom:20px;
+}
+
+#pdOrder{
+  width:100%;
+}
+
+body.pd-open{
+  overflow:hidden;
+}
+
+.product-card{
+  cursor:pointer;
+}
+
+.product-card .product-actions,
+.product-card button{
+  cursor:pointer;
+}
+
+@media(max-width:500px){
+  .pd-box{
+    width:94%;
+  }
+
+  .pd-image-wrap{
+    min-height:240px;
+  }
+}
+</style>
+\n<div id="cardModal" class="card-modal" hidden>
+  <div class="card-backdrop" id="cardBackdrop"></div>
+  <div class="card-dialog" role="dialog" aria-modal="true" aria-labelledby="cardTitle">
+    <button class="card-close" id="cardClose" type="button">×</button>
+    <div class="card-icon">💌</div>
+    <small class="label">KARTU UCAPAN DIGITAL</small>
+    <h2 id="cardTitle">Tambahkan kartu ucapan</h2>
+    <p id="cardProduct" class="card-product"></p>
+    <div class="card-form">
+      <input id="cardTo" maxlength="40" placeholder="Untuk siapa? (opsional)">
+      <input id="cardFrom" maxlength="40" placeholder="Dari siapa? (opsional)">
+      <textarea id="cardMessage" maxlength="500" rows="5" placeholder="Tulis pesan ucapan di sini..."></textarea>
+      <div class="card-count"><span id="cardCount">0</span>/500</div>
+    </div>
+    <div class="card-preview"><small>PREVIEW</small><div id="cardPreviewText">Pesan ucapanmu akan tampil di sini.</div></div>
+    <button class="pill card-send" id="cardSend" type="button">💬 Kirim ucapan lewat WhatsApp</button>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+<script id="directOwnerLogin">
+(function(){
+
+const btn=document.getElementById("ownerLoginDirectBtn");
+
+if(!btn)return;
+
+btn.onclick=function(){
+
+  let old=document.getElementById("directLoginBox");
+  if(old)old.remove();
+
+  const wrap=document.createElement("div");
+  wrap.id="directLoginBox";
+
+  wrap.style.cssText=`
+    position:fixed;
+    inset:0;
+    z-index:999999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(0,0,0,.65);
+    backdrop-filter:blur(10px);
+  `;
+
+  wrap.innerHTML=`
+    <div style="
+      width:min(420px,100%);
+      background:white;
+      color:#222;
+      border-radius:24px;
+      padding:28px 22px;
+      box-shadow:0 20px 60px rgba(0,0,0,.35);
+      position:relative;
+      font-family:inherit;
+    ">
+
+      <button id="directLoginClose" type="button"
+        style="
+          position:absolute;
+          right:14px;
+          top:12px;
+          width:36px;
+          height:36px;
+          border:0;
+          border-radius:50%;
+          background:#f3f3f3;
+          font-size:24px;
+          cursor:pointer;
+        ">×</button>
+
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:42px">🔐</div>
+        <div style="font-size:12px;letter-spacing:2px;font-weight:bold;color:#999">
+          OWNER
+        </div>
+        <h2 style="margin:5px 0;font-size:25px">
+          Login Dashboard
+        </h2>
+        <p style="margin:0;color:#777;font-size:14px">
+          Masuk untuk mengelola katalog RV FLOWERCRAFT
+        </p>
+      </div>
+
+      <form id="directLoginForm">
+
+        <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:6px">
+          Email Owner
+        </label>
+
+        <input value="mraffiirawan11.10@gmail.com"
+          style="
+            width:100%;
+            box-sizing:border-box;
+            padding:13px;
+            border:1px solid #ddd;
+            border-radius:12px;
+            margin-bottom:14px;
+            background:#f5f5f5;
+          ">
+
+        <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:6px">
+          Password
+        </label>
+
+        <input id="directPassword"
+          type="password"
+          placeholder="Masukkan password owner"
+          autocomplete="current-password"
+          required
+          style="
+            width:100%;
+            box-sizing:border-box;
+            padding:13px;
+            border:1px solid #ddd;
+            border-radius:12px;
+            margin-bottom:8px;
+            font-size:16px;
+          ">
+
+        <div id="directLoginError"
+          style="
+            min-height:20px;
+            color:#d33;
+            font-size:13px;
+            margin-bottom:10px;
+          ">
+        </div>
+
+        <button type="submit"
+          style="
+            width:100%;
+            padding:14px;
+            border:0;
+            border-radius:14px;
+            background:#111;
+            color:white;
+            font-size:15px;
+            font-weight:bold;
+            cursor:pointer;
+          ">
+          🔐 Masuk Dashboard
+        </button>
+
+      </form>
+    </div>
+  `;
+
+  document.body.appendChild(wrap);
+
+  const password=document.getElementById("directPassword");
+  const form=document.getElementById("directLoginForm");
+  const error=document.getElementById("directLoginError");
+  const close=document.getElementById("directLoginClose");
+
+  close.onclick=()=>wrap.remove();
+
+  wrap.onclick=e=>{
+    if(e.target===wrap)wrap.remove();
+  };
+
+  setTimeout(()=>password.focus(),100);
+
+  form.onsubmit=async function(e){
+
+    e.preventDefault();
+
+    const value=password.value.trim();
+
+    if(!value){
+      error.textContent="Masukkan password owner.";
+      password.focus();
+      return;
+    }
+
+    const submit=form.querySelector("button[type=submit]");
+    submit.disabled=true;
+    submit.textContent="⏳ Memeriksa...";
+
+    try{
+
+      if(typeof supabaseClient==="undefined"){
+        error.textContent="Supabase belum siap. Silakan refresh halaman.";
+        return;
+      }
+
+      const result=await supabaseClient.auth.signInWithPassword({
+        email:"mraffiirawan11.10@gmail.com",
+        password:value
+      });
+
+      if(result.error){
+        console.error(result.error);
+        error.textContent="Password owner salah.";
+        return;
+      }
+
+      wrap.remove();
+
+      if(typeof go==="function"){
+        go("owner");
+      }else{
+        const owner=document.getElementById("owner");
+        if(owner){
+          document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+          owner.classList.add("active");
+        }
+      }
+
+      if(typeof renderAll==="function")renderAll();
+
+      alert("✅ Login Owner berhasil!");
+
+    }catch(err){
+
+      console.error(err);
+      error.textContent="Terjadi kesalahan saat login.";
+
+    }finally{
+
+      submit.disabled=false;
+      submit.textContent="🔐 Masuk Dashboard";
+
+    }
+  };
+
+};
+
+})();
+</script>
+
+
+
+
+<style id="favoriteShareStyle">
+.pd-extra-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.pd-action-btn{
+  border:1px solid #ead7e0;
+  background:#fff;
+  color:#555;
+  padding:12px;
+  border-radius:14px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.pd-action-btn:hover{
+  transform:translateY(-1px);
+  background:#fff7fa;
+}
+
+.pd-action-btn.favorite-active{
+  color:#d83f7d;
+  border-color:#f0a8c5;
+  background:#fff1f6;
+}
+
+@media(max-width:500px){
+  .pd-action-btn{
+    padding:11px 8px;
+    font-size:13px;
+  }
+}
+</style>
+<style>
+.catalog-search{
+display:flex;
+align-items:center;
+gap:8px;
+margin:12px 0;
+padding:0 12px;
+background:#fff;
+border:1px solid #eadde3;
+border-radius:16px;
+}
+.catalog-search input{
+flex:1;
+border:0;
+outline:0;
+padding:13px 4px;
+background:transparent;
+font-size:14px;
+}
+.catalog-search button{
+border:0;
+background:none;
+font-size:22px;
+color:#999;
+}
+</style>
+
+<style id="rvAnalyticsStyle">
+.analytics-owner-card{
+  position:relative;
+  overflow:hidden;
+}
+
+.analytics-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:15px;
+}
+
+.analytics-header h3{
+  margin:4px 0 0;
+}
+
+.analytics-refresh{
+  width:40px;
+  height:40px;
+  border:1px solid rgba(120,90,110,.15);
+  border-radius:13px;
+  background:rgba(255,255,255,.65);
+  font-size:22px;
+  cursor:pointer;
+}
+
+.analytics-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.analytics-box{
+  padding:15px;
+  border-radius:17px;
+  background:linear-gradient(
+    145deg,
+    rgba(255,255,255,.82),
+    rgba(249,239,247,.58)
+  );
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:
+    0 7px 22px rgba(80,50,70,.08),
+    inset 0 1px 0 rgba(255,255,255,.9);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+.analytics-box span{
+  display:block;
+  font-size:22px;
+  margin-bottom:7px;
+}
+
+.analytics-box small{
+  display:block;
+  opacity:.65;
+  font-size:11px;
+}
+
+.analytics-box strong{
+  display:block;
+  margin-top:4px;
+  font-size:25px;
+}
+
+.analytics-status{
+  margin-top:13px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:11px;
+  opacity:.65;
+}
+
+.status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#35b96b;
+  box-shadow:0 0 9px rgba(53,185,107,.55);
+}
+
+@media(max-width:420px){
+  .analytics-grid{
+    gap:8px;
+  }
+  .analytics-box{
+    padding:13px;
+  }
+}
+</style>
+</body>
+</html>
