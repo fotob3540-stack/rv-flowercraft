@@ -2583,3 +2583,674 @@ body.dark-mode .weather-select,
   border:1px solid rgba(255,255,255,.15);
 }
 
+
+/* =========================================================
+   RV FLOWERCRAFT — WEATHER DASHBOARD DARK GLASS
+   ========================================================= */
+
+.weather-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.weather-header h2{
+  margin:4px 0 2px;
+  font-size:25px;
+}
+
+.weather-zone{
+  color:#888;
+  font-size:13px;
+}
+
+.weather-select{
+  max-width:150px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.65);
+  color:#fff;
+  outline:none;
+}
+
+.weather-main-glass{
+  padding:14px;
+  border-radius:28px;
+  background:linear-gradient(
+    145deg,
+    rgba(15,18,25,.96),
+    rgba(5,7,12,.90)
+  );
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:
+    0 20px 55px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.04);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+  color:#fff;
+}
+
+.weather-aqi-row{
+  display:grid;
+  grid-template-columns:1.2fr .8fr .8fr;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.weather-location-line,
+.weather-aqi,
+.weather-temperature{
+  min-height:82px;
+  padding:15px;
+  border-radius:20px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.045);
+  box-sizing:border-box;
+}
+
+.weather-location-line{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.weather-pin{
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.08);
+  font-size:13px;
+}
+
+.weather-location-line small,
+.weather-aqi small,
+.weather-temperature small,
+.weather-tile small,
+.sun-side small,
+.weather-advice-head small,
+.weather-advice-grid small{
+  display:block;
+  color:rgba(255,255,255,.55);
+  font-size:10px;
+  letter-spacing:.5px;
+}
+
+.weather-location-line strong{
+  display:block;
+  margin-top:4px;
+  font-size:14px;
+}
+
+.weather-aqi strong{
+  display:block;
+  font-size:29px;
+  margin-top:4px;
+}
+
+.weather-aqi span{
+  display:block;
+  color:rgba(255,255,255,.62);
+  font-size:11px;
+}
+
+.weather-temperature{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.weather-temperature strong{
+  font-size:27px;
+}
+
+.weather-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.weather-tile{
+  min-height:112px;
+  padding:15px;
+  border-radius:21px;
+  background:rgba(255,255,255,.065);
+  border:1px solid rgba(255,255,255,.045);
+  box-sizing:border-box;
+}
+
+.weather-tile-icon{
+  display:block;
+  font-size:23px;
+  margin-bottom:10px;
+  color:#fff;
+}
+
+.weather-tile strong{
+  display:block;
+  margin-top:7px;
+  font-size:20px;
+  line-height:1.1;
+}
+
+.weather-tile b{
+  display:block;
+  margin-top:5px;
+  color:rgba(255,255,255,.58);
+  font-size:10px;
+  font-weight:500;
+}
+
+.sun-card{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 1.4fr 1fr;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+  min-height:140px;
+  padding:15px;
+  border-radius:22px;
+  background:
+    radial-gradient(
+      circle at 50% 65%,
+      rgba(45,45,130,.42),
+      transparent 48%
+    ),
+    rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.045);
+  box-sizing:border-box;
+}
+
+.sun-side span{
+  display:block;
+  font-size:25px;
+  margin-bottom:5px;
+}
+
+.sun-side strong{
+  display:block;
+  margin-top:6px;
+  font-size:25px;
+}
+
+.sun-side.right{
+  text-align:right;
+}
+
+.sun-track{
+  position:relative;
+  height:45px;
+}
+
+.sun-line{
+  position:absolute;
+  left:0;
+  right:0;
+  top:23px;
+  height:6px;
+  border-radius:99px;
+  background:rgba(255,255,255,.2);
+}
+
+.sun-ball{
+  position:absolute;
+  left:18%;
+  top:5px;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#10131c;
+  box-shadow:0 0 18px rgba(255,255,255,.12);
+}
+
+.weather-advice{
+  margin-top:10px;
+  padding:16px;
+  border-radius:22px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.045);
+}
+
+.weather-advice-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-bottom:13px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.weather-advice-head strong{
+  display:block;
+  margin-top:4px;
+  font-size:15px;
+}
+
+.weather-advice-head > span{
+  font-size:27px;
+  color:rgba(255,255,255,.6);
+}
+
+.weather-advice-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  padding-top:15px;
+}
+
+.weather-advice-grid > div{
+  text-align:center;
+  min-height:78px;
+}
+
+.weather-advice-grid span{
+  display:block;
+  font-size:22px;
+  margin-bottom:8px;
+}
+
+.weather-advice-grid strong{
+  display:block;
+  margin-top:5px;
+  font-size:12px;
+  line-height:1.25;
+}
+
+@media(max-width:500px){
+
+  .weather-aqi-row{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .weather-location-line{
+    grid-column:1/-1;
+  }
+
+  .weather-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .weather-tile{
+    min-height:105px;
+    padding:12px;
+  }
+
+  .weather-tile strong{
+    font-size:17px;
+  }
+
+  .sun-card{
+    grid-template-columns:.9fr 1.2fr .9fr;
+  }
+
+  .sun-side strong{
+    font-size:21px;
+  }
+
+}
+
+@media(max-width:370px){
+
+  .weather-grid{
+    gap:7px;
+  }
+
+  .weather-tile{
+    padding:10px;
+  }
+
+  .weather-tile strong{
+    font-size:15px;
+  }
+
+  .weather-advice-grid{
+    grid-template-columns:1fr 1fr 1fr;
+  }
+
+}
+
+
+/* ===== FORCE TOOLS GRID ===== */
+#tools .tools-grid{
+  display:grid !important;
+  grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+  gap:16px !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+}
+
+#tools .tool-box{
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:flex-start !important;
+  align-items:flex-start !important;
+  width:100% !important;
+  min-width:0 !important;
+  min-height:160px !important;
+  box-sizing:border-box !important;
+  padding:20px !important;
+  margin:0 !important;
+  border-radius:22px !important;
+  border:1px solid rgba(0,0,0,.10) !important;
+  background:rgba(255,255,255,.82) !important;
+  box-shadow:0 10px 30px rgba(0,0,0,.08) !important;
+}
+
+#tools .tool-icon{
+  flex:none !important;
+  width:50px !important;
+  height:50px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin-bottom:14px !important;
+  border-radius:15px !important;
+  font-size:25px !important;
+  background:rgba(0,0,0,.06) !important;
+}
+
+#tools .tool-box strong{
+  display:block !important;
+  width:100% !important;
+  font-size:15px !important;
+  margin-bottom:6px !important;
+}
+
+#tools .tool-box small{
+  display:block !important;
+  width:100% !important;
+  font-size:12px !important;
+  line-height:1.4 !important;
+}
+
+@media(max-width:380px){
+  #tools .tools-grid{
+    grid-template-columns:repeat(2, minmax(0,1fr)) !important;
+    gap:10px !important;
+  }
+
+  #tools .tool-box{
+    min-height:145px !important;
+    padding:14px !important;
+  }
+}
+
+
+/* =========================================
+   RV FLOWERCRAFT - TIKTOK DOWNLOADER
+   ========================================= */
+
+.tiktok-modal{
+  position:fixed;
+  inset:0;
+  z-index:999999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+
+.tiktok-modal[hidden]{
+  display:none;
+}
+
+.tiktok-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(12px);
+}
+
+.tiktok-box{
+  position:relative;
+  z-index:2;
+  width:min(470px,100%);
+  max-height:92vh;
+  overflow:auto;
+  padding:22px;
+  border-radius:26px;
+  background:rgba(12,12,12,.94);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:
+    0 25px 80px rgba(0,0,0,.55),
+    0 0 35px rgba(255,255,255,.04);
+}
+
+.tiktok-close{
+  position:absolute;
+  top:14px;
+  right:14px;
+  width:36px;
+  height:36px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:50%;
+  background:rgba(255,255,255,.07);
+  color:#fff;
+  font-size:22px;
+  cursor:pointer;
+}
+
+.tiktok-head{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding-right:42px;
+}
+
+.tiktok-logo{
+  width:46px;
+  height:46px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.12);
+  color:#fff;
+  font-size:20px;
+}
+
+.tiktok-head small{
+  color:#888;
+  font-size:9px;
+  letter-spacing:1.5px;
+}
+
+.tiktok-head h2{
+  margin:3px 0 0;
+  font-size:22px;
+}
+
+.tiktok-subtitle{
+  color:#999;
+  font-size:12px;
+  line-height:1.5;
+  margin:14px 0 16px;
+}
+
+.tiktok-input-wrap{
+  display:flex;
+  gap:8px;
+  padding:6px;
+  border-radius:15px;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.1);
+}
+
+.tiktok-input-wrap input{
+  min-width:0;
+  flex:1;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#fff;
+  padding:12px 9px;
+  font-size:13px;
+}
+
+.tiktok-input-wrap input::placeholder{
+  color:#666;
+}
+
+.tiktok-check{
+  border:0;
+  border-radius:11px;
+  padding:0 15px;
+  background:#fff;
+  color:#080808;
+  font-weight:800;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.tiktok-check:disabled{
+  opacity:.45;
+}
+
+/* loading garis putih neon lembut */
+
+.tiktok-loading{
+  display:none;
+  margin-top:18px;
+}
+
+.tiktok-loading.active{
+  display:block;
+}
+
+.tiktok-loading span{
+  display:block;
+  text-align:center;
+  margin-bottom:9px;
+  color:#999;
+  font-size:11px;
+}
+
+.tiktok-neon-line{
+  height:3px;
+  position:relative;
+  overflow:hidden;
+  border-radius:10px;
+  background:rgba(255,255,255,.08);
+  box-shadow:0 0 12px rgba(255,255,255,.08);
+}
+
+.tiktok-neon-line::after{
+  content:"";
+  position:absolute;
+  left:-35%;
+  top:0;
+  width:35%;
+  height:100%;
+  border-radius:10px;
+  background:#fff;
+  box-shadow:
+    0 0 5px #fff,
+    0 0 12px rgba(255,255,255,.75),
+    0 0 24px rgba(255,255,255,.3);
+  animation:tiktokLoading 1.15s ease-in-out infinite;
+}
+
+@keyframes tiktokLoading{
+  0%{left:-35%}
+  50%{left:100%}
+  100%{left:100%}
+}
+
+.tiktok-error{
+  display:none;
+  margin-top:13px;
+  padding:11px;
+  border-radius:12px;
+  background:rgba(255,255,255,.055);
+  color:#bbb;
+  font-size:12px;
+  text-align:center;
+}
+
+.tiktok-error.show{
+  display:block;
+}
+
+.tiktok-result{
+  display:none;
+  margin-top:18px;
+}
+
+.tiktok-result.show{
+  display:block;
+}
+
+.tiktok-thumbnail-wrap{
+  overflow:hidden;
+  border-radius:18px;
+  background:#090909;
+  border:1px solid rgba(255,255,255,.1);
+}
+
+.tiktok-thumbnail{
+  display:block;
+  width:100%;
+  max-height:480px;
+  aspect-ratio:9/16;
+  object-fit:cover;
+}
+
+.tiktok-info{
+  padding:13px 2px 2px;
+}
+
+.tiktok-info strong{
+  display:block;
+  font-size:14px;
+  color:#eee;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.tiktok-info small{
+  display:block;
+  margin-top:5px;
+  color:#777;
+  font-size:11px;
+}
+
+.tiktok-download{
+  width:100%;
+  margin-top:13px;
+  padding:14px;
+  border:0;
+  border-radius:14px;
+  background:#fff;
+  color:#080808;
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.tiktok-download:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+@media(max-width:480px){
+  .tiktok-box{
+    padding:18px;
+    border-radius:22px;
+  }
+
+  .tiktok-input-wrap{
+    flex-direction:column;
+  }
+
+  .tiktok-check{
+    min-height:44px;
+  }
+}
+

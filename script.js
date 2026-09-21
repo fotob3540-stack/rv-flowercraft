@@ -1692,3 +1692,407 @@ document.addEventListener(
   }
 );
 
+
+/* =========================================================
+   WEATHER DASHBOARD EXTRA DATA — OPEN-METEO
+   ========================================================= */
+
+async function loadWeatherDashboardExtras(){
+
+  const regionKey =
+    currentWeatherCity + "|" + currentWeatherState;
+
+  const region =
+    weatherRegions[regionKey];
+
+  if(!region) return;
+
+  try{
+
+    const url =
+      "https://api.open-meteo.com/v1/forecast" +
+      "?latitude=" + region.lat +
+      "&longitude=" + region.lon +
+      "&current=temperature_2m,relative_humidity_2m,apparent_temperature,pressure_msl,wind_speed_10m,visibility,uv_index,weather_code" +
+      "&daily=sunrise,sunset,uv_index_max" +
+      "&temperature_unit=celsius" +
+      "&wind_speed_unit=kmh" +
+      "&timezone=Asia%2FJakarta";
+
+    const response = await fetch(url);
+
+    if(!response.ok)
+      throw new Error("Open-Meteo error");
+
+    const data = await response.json();
+
+    const c = data.current || {};
+    const d = data.daily || {};
+
+    const set = (id,value) => {
+      const el = document.getElementById(id);
+      if(el && value !== undefined && value !== null)
+        el.textContent = value;
+    };
+
+    set(
+      "weatherFeels",
+      c.apparent_temperature !== undefined
+        ? Math.round(c.apparent_temperature) + "°"
+        : "--°"
+    );
+
+    set(
+      "weatherVisibility",
+      c.visibility !== undefined
+        ? (c.visibility / 1000).toFixed(1) + " km"
+        : "-- km"
+    );
+
+    set(
+      "weatherUV",
+      c.uv_index !== undefined
+        ? Math.round(c.uv_index)
+        : "--"
+    );
+
+    const uv =
+      Number(c.uv_index);
+
+    let uvText = "Rendah";
+
+    if(uv >= 3 && uv < 6)
+      uvText = "Sedang";
+
+    if(uv >= 6 && uv < 8)
+      uvText = "Tinggi";
+
+    if(uv >= 8 && uv < 11)
+      uvText = "Sangat tinggi";
+
+    if(uv >= 11)
+      uvText = "Ekstrem";
+
+    set("weatherUVStatus",uvText);
+
+    if(d.sunrise?.[0])
+      set(
+        "weatherSunrise",
+        new Date(d.sunrise[0]).toLocaleTimeString(
+          "id-ID",
+          {
+            hour:"2-digit",
+            minute:"2-digit",
+            hour12:false
+          }
+        )
+      );
+
+    if(d.sunset?.[0])
+      set(
+        "weatherSunset",
+        new Date(d.sunset[0]).toLocaleTimeString(
+          "id-ID",
+          {
+            hour:"2-digit",
+            minute:"2-digit",
+            hour12:false
+          }
+        )
+      );
+
+    const code =
+      Number(c.weather_code);
+
+    let condition = "Berawan";
+
+    if(code === 0)
+      condition = "Cerah";
+
+    else if(code <= 3)
+      condition = "Berawan";
+
+    else if(code >= 45 && code <= 48)
+      condition = "Berkabut";
+
+    else if(code >= 51 && code <= 67)
+      condition = "Hujan ringan";
+
+    else if(code >= 71 && code <= 77)
+      condition = "Salju";
+
+    else if(code >= 80 && code <= 82)
+      condition = "Hujan";
+
+    else if(code >= 95)
+      condition = "Badai petir";
+
+    set("weatherCondition",condition);
+
+    set(
+      "weatherLocationCard",
+      currentWeatherCity + ", " + currentWeatherState
+    );
+
+  }catch(error){
+
+    console.error(
+      "Weather dashboard:",
+      error
+    );
+
+  }
+
+}
+
+
+/* Jalankan dashboard tambahan */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    setTimeout(
+      loadWeatherDashboardExtras,
+      500
+    );
+
+    setInterval(
+      loadWeatherDashboardExtras,
+      10 * 60 * 1000
+    );
+
+  }
+);
+
+
+/* Ikuti pergantian wilayah */
+
+document.addEventListener(
+  "change",
+  function(e){
+
+    if(e.target.id === "weatherRegion"){
+
+      setTimeout(
+        loadWeatherDashboardExtras,
+        200
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   RV FLOWERCRAFT - TIKTOK DOWNLOADER UI
+   ========================================= */
+
+(function(){
+
+  const tool = document.querySelector('[data-tool="tiktok"]');
+
+  const modal = document.getElementById("tiktokModal");
+  const backdrop = document.getElementById("tiktokBackdrop");
+  const close = document.getElementById("tiktokClose");
+
+  const input = document.getElementById("tiktokUrl");
+  const check = document.getElementById("tiktokCheck");
+
+  const loading = document.getElementById("tiktokLoading");
+  const error = document.getElementById("tiktokError");
+  const result = document.getElementById("tiktokResult");
+
+  const thumb = document.getElementById("tiktokThumbnail");
+  const title = document.getElementById("tiktokTitle");
+  const author = document.getElementById("tiktokAuthor");
+
+  const download = document.getElementById("tiktokDownload");
+
+  let currentUrl = "";
+
+  if(!tool || !modal) return;
+
+  function openModal(){
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+
+    setTimeout(()=>{
+      input?.focus();
+    },100);
+  }
+
+  function closeModal(){
+    modal.hidden = true;
+    document.body.style.overflow = "";
+  }
+
+  function showError(message){
+    error.textContent = message;
+    error.classList.add("show");
+  }
+
+  function clearError(){
+    error.textContent = "";
+    error.classList.remove("show");
+  }
+
+  function setLoading(active){
+    loading.classList.toggle("active",active);
+    check.disabled = active;
+  }
+
+  tool.addEventListener("click",openModal);
+  close?.addEventListener("click",closeModal);
+  backdrop?.addEventListener("click",closeModal);
+
+  async function checkTikTok(){
+
+    const value = input.value.trim();
+
+    if(!value){
+      showError("Masukkan URL TikTok terlebih dahulu.");
+      return;
+    }
+
+    clearError();
+    result.classList.remove("show");
+    setLoading(true);
+
+    try{
+
+      const response = await fetch(
+        "http://127.0.0.1:8787/api/check",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            input:value
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if(!response.ok){
+        throw new Error(
+          data.error || "URL TikTok tidak dapat diperiksa."
+        );
+      }
+
+      currentUrl = value;
+
+      if(data.thumbnail){
+        thumb.src = data.thumbnail;
+      }else{
+        throw new Error("Thumbnail video tidak tersedia.");
+      }
+
+      title.textContent =
+        data.title || "Video siap diunduh";
+
+      author.textContent =
+        data.author ? "@" + data.author : "";
+
+      result.classList.add("show");
+
+    }catch(err){
+
+      console.error(err);
+
+      showError(
+        err.message ||
+        "Gagal memeriksa URL TikTok."
+      );
+
+    }finally{
+
+      setLoading(false);
+
+    }
+  }
+
+  async function downloadTikTok(){
+
+    if(!currentUrl){
+      showError("Cek URL terlebih dahulu.");
+      return;
+    }
+
+    download.disabled = true;
+    download.textContent = "Menyiapkan MP4...";
+
+    try{
+
+      const response = await fetch(
+        "http://127.0.0.1:8787/api/download",
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            input:currentUrl
+          })
+        }
+      );
+
+      if(!response.ok){
+
+        let message = "Download gagal.";
+
+        try{
+          const data = await response.json();
+          message = data.error || message;
+        }catch{}
+
+        throw new Error(message);
+      }
+
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+
+      a.href = blobUrl;
+      a.download = "tiktok-video.mp4";
+
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      setTimeout(()=>{
+        URL.revokeObjectURL(blobUrl);
+      },1000);
+
+    }catch(err){
+
+      console.error(err);
+
+      showError(
+        err.message ||
+        "Gagal mengunduh video."
+      );
+
+    }finally{
+
+      download.disabled = false;
+      download.textContent = "↓ Download MP4 Sekarang";
+
+    }
+  }
+
+  check.addEventListener("click",checkTikTok);
+  download.addEventListener("click",downloadTikTok);
+
+  input.addEventListener("keydown",e=>{
+    if(e.key === "Enter"){
+      checkTikTok();
+    }
+  });
+
+})();
+
