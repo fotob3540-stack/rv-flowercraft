@@ -72,58 +72,47 @@ async function handleCheck(request) {
 async function handleDownload(request) {
   try {
     const body = await request.json();
-    const input = String(body?.input || "").trim();
+    const input = String(body.input || "").trim();
 
     validateTikTokUrl(input);
 
     const result = await getTikTokData(input);
 
-    if (!result?.video) {
+    if (!result.video) {
       return json({
         ok: false,
-        error: "Data video TikTok tidak ditemukan",
-        code: "VIDEO_NOT_FOUND",
-        downloadable: false
+        error: "Data video TikTok tidak ditemukan"
       }, 404);
     }
 
-    const video = result.video;
+    const candidates = [];
 
-    const candidates = [
-      ["downloadUrl", video.downloadUrl],
-      ["playUrl", video.playUrl]
-    ].filter(([, url]) => typeof url === "string" && url.length > 0);
+    if (result.video.downloadUrl) {
+      candidates.push({
+        name: "downloadUrl",
+        url: result.video.downloadUrl
+      });
+    }
 
-    const videoInfo = {
-      id: video.id || "",
-      author: video.author || "",
-      duration: video.duration || 0,
-      width: video.width || 0,
-      height: video.height || 0
-    };
-
-    if (!candidates.length) {
-      return json({
-        ok: false,
-        error: "URL media TikTok tidak tersedia",
-        code: "MEDIA_URL_NOT_FOUND",
-        downloadable: false,
-        video: videoInfo
-      }, 404);
+    if (result.video.playUrl) {
+      candidates.push({
+        name: "playUrl",
+        url: result.video.playUrl
+      });
     }
 
     const attempts = [];
 
-    for (const [candidate, mediaUrl] of candidates) {
+    for (const candidate of candidates) {
       try {
-        const mediaResponse = await fetch(mediaUrl, {
+        const mediaResponse = await fetch(candidate.url, {
           method: "GET",
           redirect: "follow",
           headers: {
-            "User-Agent":
-              "Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 Chrome/140 Mobile Safari/537.36",
+            "User-Agent": TIKTOK_UA,
+            "Accept": "video/mp4,video/*,*/*;q=0.8",
             "Referer": "https://www.tiktok.com/",
-            "Accept": "video/mp4,video/*,*/*;q=0.8"
+            "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8"
           }
         });
 
@@ -133,73 +122,82 @@ async function handleDownload(request) {
         const contentLength =
           mediaResponse.headers.get("content-length") || "";
 
-        if (mediaResponse.ok) {
-          const buffer = await mediaResponse.arrayBuffer();
+        attempts.push({
+          candidate: candidate.name,
+          status: mediaResponse.status,
+          statusText: mediaResponse.statusText,
+          contentType,
+          contentLength,
+          finalUrl: mediaResponse.url
+        });
 
-          return new Response(buffer, {
-            status: 200,
-            headers: {
-              "Content-Type": contentType || "video/mp4",
-              "Content-Length": String(buffer.byteLength),
-              "Content-Disposition":
-                `attachment; filename="tiktok-${video.id || "video"}.mp4"`,
-              "Cache-Control": "no-store"
+        if (mediaResponse.ok) {
+          if (
+            contentType.includes("video/") ||
+            contentType.includes("application/octet-stream")
+          ) {
+            const headers = new Headers();
+
+            headers.set("Content-Type", contentType || "video/mp4");
+            headers.set(
+              "Content-Disposition",
+              `attachment; filename="tiktok-${result.video.id}.mp4"`
+            );
+            headers.set(
+              "Access-Control-Allow-Origin",
+              "*"
+            );
+
+            if (contentLength) {
+              headers.set("Content-Length", contentLength);
             }
-          });
+
+            return new Response(mediaResponse.body, {
+              status: 200,
+              headers
+            });
+          }
+
+          const text = await mediaResponse.text();
+
+          attempts[attempts.length - 1].preview =
+            text.slice(0, 300);
+
+          continue;
         }
 
-        attempts.push({
-          candidate,
-          status: mediaResponse.status,
-          statusText: mediaResponse.statusText || "",
-          contentType,
-          contentLength
-        });
+        const errorText = await mediaResponse.text();
+
+        attempts[attempts.length - 1].errorPreview =
+          errorText.slice(0, 500);
 
       } catch (error) {
         attempts.push({
-          candidate,
-          status: 0,
-          error: error?.message || "Request media gagal"
+          candidate: candidate.name,
+          fetchError: error?.message || String(error)
         });
       }
     }
 
-    const blocked403 = attempts.some(
-      item => Number(item.status) === 403
-    );
-
-    if (blocked403) {
-      return json({
-        ok: false,
-        error: "TikTok CDN menolak pengambilan video",
-        code: "TIKTOK_CDN_403",
-        message:
-          "Video berhasil ditemukan, tetapi URL media TikTok menolak request dari server Termux. Server tidak memaksakan pengambilan media yang ditolak.",
-        downloadable: false,
-        video: videoInfo,
-        attempts
-      }, 502);
-    }
-
     return json({
       ok: false,
-      error: "Media video gagal diambil",
-      code: "MEDIA_FETCH_FAILED",
-      message:
-        "Video berhasil ditemukan, tetapi media tidak dapat diambil dari URL CDN.",
-      downloadable: false,
-      video: videoInfo,
+      error: "TikTok CDN menolak proxy media",
+      reason: "Media URL berhasil ditemukan tetapi tidak dapat diambil oleh Worker",
+      video: {
+        id: result.video.id,
+        author: result.video.author,
+        duration: result.video.duration,
+        width: result.video.width,
+        height: result.video.height
+      },
       attempts
     }, 502);
 
   } catch (error) {
     return json({
       ok: false,
-      error: "Terjadi kesalahan pada server download",
-      code: "DOWNLOAD_SERVER_ERROR",
-      message: error?.message || "Unknown error"
-    }, 500);
+      error: error?.message || String(error)
+    }, 400);
   }
 }
 

@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "status": 200,
+  "finalUrl": "https://www.tiktok.com/@mikhadonovon/video/7684576542470901012?_r=1&_t=ZS-99ghGHvuMV8",
+  "length": 400237,
+  "found": true,
+  "video": {
+    "id": "7684576542470901012",
+    "desc": "denger suara makan nya aja udah bikin laper😋 #mikhajoanne #couple #relationship #couplestiktok #funny   ",
+    "author": "mikhadonovon",
+    "duration": 47,
+    "width": 576,
+    "height": 1024,
+    "cover": "https://p16-common-sign.tiktokcdn.com/tos-alisg-p-0037/o4QvlVeIECjgzAjf2tQAeXQDFGMu3SIOS8C5bo~tplv-tiktokx-origin.image?dr=14575&x-expires=1790229600&x-signature=9a9Y2GPgA1sC0eliQUKkS3E0QTI%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=55bbe6a9&idc=my",
+    "dynamicCover": "https://p16-common-sign.tiktokcdn.com/tos-alisg-p-0037/oEDvuE9CiIGp8FSEbUMf62ZbLfhhBRgklqIRAB~tplv-tiktokx-origin.image?dr=14575&x-expires=1790229600&x-signature=7RRPFcUXuTqedKo%2FzoNrhkQgpHo%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=55bbe6a9&idc=my",
+    "playUrl": "https://v16-webapp-prime.tiktok.com/video/tos/alisg/tos-alisg-pve-0037c001/o0fcGR8UpBBF2nhIQEfl9EApbkigbqUvDERlE2/?a=1988&bti=ODszNWYuMDE6&&bt=799&ft=-Csk_mc3PD12N7SsNn-Ux912bY6e3wv25scAp&mime_type=video_mp4&rc=ZzNnZjw5OTlnZTo4M2llNUBpanVnOHg5cmlrZDMzODczNEBfLy41MDY0X2MxYTU2YWFeYSNkcnNtMmQ0ZWZhLS1kMTFzcw%3D%3D&expire=1790231934&l=2026092214380743FD151D289300684728&ply_type=2&policy=2&signature=955ee48e289cc68681140c36d65d6e98&tk=tt_chain_token&btag=e00048000",
+    "downloadUrl": "https://v16-webapp-prime.tiktok.com/video/tos/alisg/tos-alisg-ve-37c815-sg/o8lQInaCQXASzSgAIjPMo5tej3MSF2VKWDf8Cf/?a=1988&bti=ODszNWYuMDE6&&bt=1621&eid=20480&ft=-Csk_mc3PD12N7SsNn-Ux912bY6e3wv25scAp&mime_type=video_mp4&rc=NjpkZDQ7OjNlaTVlaTY3ZEBpanVnOHg5cmlrZDMzODczNEA1Yi1fMTUxNl4xYGAzLzVgYSNkcnNtMmQ0ZWZhLS1kMTFzcw%3D%3D&expire=1790231934&l=2026092214380743FD151D289300684728&ply_type=2&policy=2&signature=f9efa3a75acaf5f0abed31477568c55d&tk=tt_chain_token&btag=e00088000"
+  },
+  "message": "Data video TikTok berhasil ditemukan"
+}

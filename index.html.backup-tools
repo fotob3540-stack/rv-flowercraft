@@ -220,122 +220,6 @@
   </div>
 </section>
 
-<section class="page" id="tools">
-  <div class="section-head top">
-    <div>
-      <small class="label">RV FLOWERCRAFT</small>
-      <h2>Tools</h2>
-    </div>
-    <span>Pilih fitur</span>
-  </div>
-
-  <div class="tools-grid">
-
-    <button class="tool-box" data-tool="weather" type="button">
-      <div class="tool-icon">☁</div>
-      <strong>Cuaca & Udara</strong>
-      <small>AQI, suhu, PM2.5 & kondisi udara</small>
-    </button>
-
-    <button class="tool-box" data-tool="tiktok" type="button">
-      <div class="tool-icon">▶</div>
-      <strong>TikTok Downloader</strong>
-      <small>Tools video TikTok</small>
-    </button>
-
-    <button class="tool-box" type="button" disabled>
-      <div class="tool-icon">🎵</div>
-      <strong>Music Tools</strong>
-      <small>Segera hadir</small>
-    </button>
-
-    <button class="tool-box" type="button" disabled>
-      <div class="tool-icon">🔧</div>
-      <strong>Tools Lainnya</strong>
-      <small>Segera hadir</small>
-    </button>
-
-  </div>
-</section>
-
-
-<!-- TIKTOK DOWNLOADER MODAL -->
-<div id="tiktokModal" class="tiktok-modal" hidden>
-  <div class="tiktok-backdrop" id="tiktokBackdrop"></div>
-
-  <div class="tiktok-box">
-
-    <button
-      id="tiktokClose"
-      class="tiktok-close"
-      type="button"
-      aria-label="Tutup"
-    >×</button>
-
-    <div class="tiktok-head">
-      <div class="tiktok-logo">▶</div>
-      <div>
-        <small>RV FLOWERCRAFT TOOLS</small>
-        <h2>TikTok Downloader</h2>
-      </div>
-    </div>
-
-    <p class="tiktok-subtitle">
-      Masukkan URL TikTok untuk mengecek video sebelum mengunduhnya.
-    </p>
-
-    <div class="tiktok-input-wrap">
-      <input
-        id="tiktokUrl"
-        type="url"
-        placeholder="Masukkan URL TikTok..."
-        autocomplete="off"
-      >
-
-      <button
-        id="tiktokCheck"
-        type="button"
-        class="tiktok-check"
-      >
-        ✓ Cek URL
-      </button>
-    </div>
-
-    <div id="tiktokLoading" class="tiktok-loading">
-      <span>Memeriksa video...</span>
-      <div class="tiktok-neon-line"></div>
-    </div>
-
-    <div id="tiktokError" class="tiktok-error"></div>
-
-    <div id="tiktokResult" class="tiktok-result">
-
-      <div class="tiktok-thumbnail-wrap">
-        <img
-          id="tiktokThumbnail"
-          class="tiktok-thumbnail"
-          alt="Thumbnail video TikTok"
-        >
-      </div>
-
-      <div class="tiktok-info">
-        <strong id="tiktokTitle">Video siap diunduh</strong>
-        <small id="tiktokAuthor"></small>
-      </div>
-
-      <button
-        id="tiktokDownload"
-        type="button"
-        class="tiktok-download"
-      >
-        ↓ Download MP4 Sekarang
-      </button>
-
-    </div>
-
-  </div>
-</div>
-
 <section class="page" id="weather">
 
   <div class="weather-header">
@@ -628,7 +512,7 @@
   <button class="nav active" data-page="home"><i>⌂</i><span>Home</span></button>
   <button class="nav" data-page="products"><i>✿</i><span>Katalog</span></button>
   <button class="nav nav-prayer" data-page="prayer"><i>🕌</i><span>Salat</span></button>
-  <button class="nav" data-page="tools"><i>🧰</i><span>Tools</span></button>
+  <button class="nav" data-page="weather"><i>☁</i><span>Cuaca</span></button>
   <button class="nav" data-page="profile"><i>♡</i><span>Toko</span></button>
 </nav>
 </div>
@@ -752,31 +636,6 @@
 <div id="toast" class="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
-<script>
-(function(){
-  document.addEventListener("click", function(e){
-
-    const tool = e.target.closest("[data-tool]");
-    if(!tool) return;
-
-    const type = tool.dataset.tool;
-
-    if(type === "weather"){
-      if(typeof go === "function"){
-        go("weather");
-      }
-      return;
-    }
-
-    if(type === "tiktok"){
-      
-      return;
-    }
-
-  });
-})();
-</script>
-
 <script id="directOwnerLogin">
 (function(){
 
@@ -989,51 +848,5 @@ btn.onclick=function(){
 
 })();
 </script>
-
-<section class="tiktok-downloader">
-  <h2>TikTok Downloader</h2>
-  <div class="tiktok-subtitle">
-    Tempel link TikTok untuk melihat preview dan download MP4.
-  </div>
-
-  <div class="tiktok-input-row">
-    <input
-      id="rvTikTokUrl"
-      type="text"
-      placeholder="Tempel link TikTok..."
-      autocomplete="off"
-    >
-    <button id="rvTikTokPreview">Lihat</button>
-  </div>
-
-  <div id="rvTikTokError" class="tiktok-error" hidden></div>
-
-  <div id="rvTikTokPreviewBox" class="tiktok-preview" hidden>
-
-    <div class="tiktok-thumb">
-      <img id="rvTikTokThumb" alt="Thumbnail TikTok">
-      <div class="tiktok-play">▶</div>
-    </div>
-
-    <div id="rvTikTokTitle" class="tiktok-title">
-      Video TikTok
-    </div>
-
-    <div id="rvTikTokAuthor" class="tiktok-author"></div>
-
-    <button id="rvTikTokDownload" class="tiktok-download-btn">
-      Download MP4
-    </button>
-
-    <div id="rvTikTokLoading" class="tiktok-loading" hidden>
-      <div class="tiktok-loading-track">
-        <div class="tiktok-loading-bar"></div>
-      </div>
-      Mengunduh video...
-    </div>
-
-  </div>
-</section>
-
 </body>
 </html>

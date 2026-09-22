@@ -72,134 +72,107 @@ async function handleCheck(request) {
 async function handleDownload(request) {
   try {
     const body = await request.json();
-    const input = String(body?.input || "").trim();
+    const input = String(body.input || "").trim();
 
     validateTikTokUrl(input);
 
     const result = await getTikTokData(input);
 
-    if (!result?.video) {
+    if (!result.video) {
       return json({
         ok: false,
-        error: "Data video TikTok tidak ditemukan",
-        code: "VIDEO_NOT_FOUND",
-        downloadable: false
+        error: "Data video TikTok tidak ditemukan"
       }, 404);
     }
 
-    const video = result.video;
+    const candidates = [];
 
-    const candidates = [
-      ["downloadUrl", video.downloadUrl],
-      ["playUrl", video.playUrl]
-    ].filter(([, url]) => typeof url === "string" && url.length > 0);
-
-    const videoInfo = {
-      id: video.id || "",
-      author: video.author || "",
-      duration: video.duration || 0,
-      width: video.width || 0,
-      height: video.height || 0
-    };
-
-    if (!candidates.length) {
-      return json({
-        ok: false,
-        error: "URL media TikTok tidak tersedia",
-        code: "MEDIA_URL_NOT_FOUND",
-        downloadable: false,
-        video: videoInfo
-      }, 404);
+    if (result.video.downloadUrl) {
+      candidates.push({
+        name: "downloadUrl",
+        url: result.video.downloadUrl
+      });
     }
 
-    const attempts = [];
+    if (
+      result.video.playUrl &&
+      result.video.playUrl !== result.video.downloadUrl
+    ) {
+      candidates.push({
+        name: "playUrl",
+        url: result.video.playUrl
+      });
+    }
 
-    for (const [candidate, mediaUrl] of candidates) {
+    let lastStatus = 0;
+    let lastType = "";
+
+    for (const candidate of candidates) {
       try {
-        const mediaResponse = await fetch(mediaUrl, {
+        const mediaResponse = await fetch(candidate.url, {
           method: "GET",
           redirect: "follow",
           headers: {
-            "User-Agent":
-              "Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 Chrome/140 Mobile Safari/537.36",
+            "User-Agent": TIKTOK_UA,
+            "Accept": "video/mp4,video/*,*/*;q=0.8",
             "Referer": "https://www.tiktok.com/",
-            "Accept": "video/mp4,video/*,*/*;q=0.8"
+            "Origin": "https://www.tiktok.com",
+            "Range": "bytes=0-"
           }
         });
 
-        const contentType =
-          mediaResponse.headers.get("content-type") || "";
-
-        const contentLength =
-          mediaResponse.headers.get("content-length") || "";
+        lastStatus = mediaResponse.status;
+        lastType = mediaResponse.headers.get("content-type") || "";
 
         if (mediaResponse.ok) {
-          const buffer = await mediaResponse.arrayBuffer();
+          const headers = new Headers(mediaResponse.headers);
 
-          return new Response(buffer, {
+          headers.set(
+            "Content-Disposition",
+            `attachment; filename="tiktok-${result.video.id}.mp4"`
+          );
+
+          headers.set(
+            "Content-Type",
+            "video/mp4"
+          );
+
+          headers.set(
+            "Access-Control-Allow-Origin",
+            "*"
+          );
+
+          return new Response(mediaResponse.body, {
             status: 200,
-            headers: {
-              "Content-Type": contentType || "video/mp4",
-              "Content-Length": String(buffer.byteLength),
-              "Content-Disposition":
-                `attachment; filename="tiktok-${video.id || "video"}.mp4"`,
-              "Cache-Control": "no-store"
-            }
+            headers
           });
         }
-
-        attempts.push({
-          candidate,
-          status: mediaResponse.status,
-          statusText: mediaResponse.statusText || "",
-          contentType,
-          contentLength
-        });
-
-      } catch (error) {
-        attempts.push({
-          candidate,
-          status: 0,
-          error: error?.message || "Request media gagal"
-        });
+      } catch (_) {
+        // Coba URL berikutnya.
       }
-    }
-
-    const blocked403 = attempts.some(
-      item => Number(item.status) === 403
-    );
-
-    if (blocked403) {
-      return json({
-        ok: false,
-        error: "TikTok CDN menolak pengambilan video",
-        code: "TIKTOK_CDN_403",
-        message:
-          "Video berhasil ditemukan, tetapi URL media TikTok menolak request dari server Termux. Server tidak memaksakan pengambilan media yang ditolak.",
-        downloadable: false,
-        video: videoInfo,
-        attempts
-      }, 502);
     }
 
     return json({
       ok: false,
-      error: "Media video gagal diambil",
-      code: "MEDIA_FETCH_FAILED",
+      error: "CDN TikTok menolak pengambilan MP4",
+      upstreamStatus: lastStatus,
+      upstreamType: lastType,
+      video: {
+        id: result.video.id,
+        author: result.video.author,
+        duration: result.video.duration,
+        width: result.video.width,
+        height: result.video.height
+      },
       message:
-        "Video berhasil ditemukan, tetapi media tidak dapat diambil dari URL CDN.",
-      downloadable: false,
-      video: videoInfo,
-      attempts
+        "Metadata berhasil ditemukan, tetapi CDN TikTok menolak proxy download."
     }, 502);
 
   } catch (error) {
     return json({
       ok: false,
-      error: "Terjadi kesalahan pada server download",
-      code: "DOWNLOAD_SERVER_ERROR",
-      message: error?.message || "Unknown error"
-    }, 500);
+      error: error.message || "Gagal melakukan download"
+    }, 400);
   }
 }
 
@@ -244,14 +217,10 @@ function parseTikTokHtml(html, input) {
 
   if (universalMatch) {
     try {
-      const universalText = decodeHtmlEntities(universalMatch[1]);
-
-      data = JSON.parse(universalText);
-    } catch (error) {
-      // Jangan biarkan respons non-JSON seperti "error code: 1042"
-      // menghentikan parser.
-      data = null;
-    }
+      data = JSON.parse(
+        decodeHtmlEntities(universalMatch[1])
+      );
+    } catch (_) {}
   }
 
   if (!data) {
@@ -261,12 +230,10 @@ function parseTikTokHtml(html, input) {
 
     if (nextMatch) {
       try {
-        const nextText = decodeHtmlEntities(nextMatch[1]);
-
-        data = JSON.parse(nextText);
-      } catch (error) {
-        data = null;
-      }
+        data = JSON.parse(
+          decodeHtmlEntities(nextMatch[1])
+        );
+      } catch (_) {}
     }
   }
 

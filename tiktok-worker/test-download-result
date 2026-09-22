@@ -1,0 +1,4 @@
+{
+  "ok": false,
+  "error": "Unexpected token 'e', \"error code: 1042\n\" is not valid JSON"
+}

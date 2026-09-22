@@ -220,266 +220,74 @@
   </div>
 </section>
 
-<section class="page" id="tools">
+<section class="page" id="weather">
   <div class="section-head top">
     <div>
-      <small class="label">RV FLOWERCRAFT</small>
-      <h2>Tools</h2>
-    </div>
-    <span>Pilih fitur</span>
-  </div>
-
-  <div class="tools-grid">
-
-    <button class="tool-box" data-tool="weather" type="button">
-      <div class="tool-icon">☁</div>
-      <strong>Cuaca & Udara</strong>
-      <small>AQI, suhu, PM2.5 & kondisi udara</small>
-    </button>
-
-    <button class="tool-box" data-tool="tiktok" type="button">
-      <div class="tool-icon">▶</div>
-      <strong>TikTok Downloader</strong>
-      <small>Tools video TikTok</small>
-    </button>
-
-    <button class="tool-box" type="button" disabled>
-      <div class="tool-icon">🎵</div>
-      <strong>Music Tools</strong>
-      <small>Segera hadir</small>
-    </button>
-
-    <button class="tool-box" type="button" disabled>
-      <div class="tool-icon">🔧</div>
-      <strong>Tools Lainnya</strong>
-      <small>Segera hadir</small>
-    </button>
-
-  </div>
-</section>
-
-
-<!-- TIKTOK DOWNLOADER MODAL -->
-<div id="tiktokModal" class="tiktok-modal" hidden>
-  <div class="tiktok-backdrop" id="tiktokBackdrop"></div>
-
-  <div class="tiktok-box">
-
-    <button
-      id="tiktokClose"
-      class="tiktok-close"
-      type="button"
-      aria-label="Tutup"
-    >×</button>
-
-    <div class="tiktok-head">
-      <div class="tiktok-logo">▶</div>
-      <div>
-        <small>RV FLOWERCRAFT TOOLS</small>
-        <h2>TikTok Downloader</h2>
-      </div>
-    </div>
-
-    <p class="tiktok-subtitle">
-      Masukkan URL TikTok untuk mengecek video sebelum mengunduhnya.
-    </p>
-
-    <div class="tiktok-input-wrap">
-      <input
-        id="tiktokUrl"
-        type="url"
-        placeholder="Masukkan URL TikTok..."
-        autocomplete="off"
-      >
-
-      <button
-        id="tiktokCheck"
-        type="button"
-        class="tiktok-check"
-      >
-        ✓ Cek URL
-      </button>
-    </div>
-
-    <div id="tiktokLoading" class="tiktok-loading">
-      <span>Memeriksa video...</span>
-      <div class="tiktok-neon-line"></div>
-    </div>
-
-    <div id="tiktokError" class="tiktok-error"></div>
-
-    <div id="tiktokResult" class="tiktok-result">
-
-      <div class="tiktok-thumbnail-wrap">
-        <img
-          id="tiktokThumbnail"
-          class="tiktok-thumbnail"
-          alt="Thumbnail video TikTok"
-        >
-      </div>
-
-      <div class="tiktok-info">
-        <strong id="tiktokTitle">Video siap diunduh</strong>
-        <small id="tiktokAuthor"></small>
-      </div>
-
-      <button
-        id="tiktokDownload"
-        type="button"
-        class="tiktok-download"
-      >
-        ↓ Download MP4 Sekarang
-      </button>
-
-    </div>
-
-  </div>
-</div>
-
-<section class="page" id="weather">
-
-  <div class="weather-header">
-    <div>
       <small class="label">CUACA & UDARA</small>
-      <h2 id="weatherLocation">Pekanbaru, Riau</h2>
-      <span class="weather-zone">Riau • WIB</span>
+      <h2>Pekanbaru</h2>
     </div>
-
-    <select id="weatherRegion" class="weather-select" aria-label="Pilih wilayah Riau">
-      <option value="Pekanbaru|Riau">Pekanbaru</option>
-      <option value="Dumai|Riau">Dumai</option>
-      <option value="Bengkalis|Riau">Bengkalis</option>
-      <option value="Siak|Riau">Siak</option>
-      <option value="Pelalawan|Riau">Pelalawan</option>
-      <option value="Kampar|Riau">Kampar</option>
-      <option value="Rokan Hulu|Riau">Rokan Hulu</option>
-      <option value="Rokan Hilir|Riau">Rokan Hilir</option>
-      <option value="Indragiri Hulu|Riau">Indragiri Hulu</option>
-      <option value="Indragiri Hilir|Riau">Indragiri Hilir</option>
-      <option value="Kuantan Singingi|Riau">Kuantan Singingi</option>
-      <option value="Kepulauan Meranti|Riau">Kepulauan Meranti</option>
-    </select>
+    <span>Riau • WIB</span>
   </div>
 
-  <div class="weather-main-glass">
-
-    <div class="weather-aqi-row">
-      <div class="weather-location-line">
-        <span class="weather-pin">●</span>
-        <div>
-          <small>LOKASI</small>
-          <strong id="weatherLocationCard">Pekanbaru, Riau</strong>
-        </div>
+  <div class="weather-card">
+    <div class="weather-location">
+      <span>📍</span>
+      <div>
+        <small>LOKASI</small>
+        <strong id="weatherLocation">Pekanbaru, Riau</strong>
+        <select id="weatherRegion" class="weather-select" aria-label="Pilih wilayah Riau">
+          <option value="Pekanbaru|Riau">Pekanbaru</option>
+          <option value="Dumai|Riau">Dumai</option>
+          <option value="Bengkalis|Riau">Bengkalis</option>
+          <option value="Siak|Riau">Siak</option>
+          <option value="Pelalawan|Riau">Pelalawan</option>
+          <option value="Kampar|Riau">Kampar</option>
+          <option value="Rokan Hulu|Riau">Rokan Hulu</option>
+          <option value="Rokan Hilir|Riau">Rokan Hilir</option>
+          <option value="Indragiri Hulu|Riau">Indragiri Hulu</option>
+          <option value="Indragiri Hilir|Riau">Indragiri Hilir</option>
+          <option value="Kuantan Singingi|Riau">Kuantan Singingi</option>
+          <option value="Kepulauan Meranti|Riau">Kepulauan Meranti</option>
+        </select>
       </div>
+    </div>
 
-      <div class="weather-aqi">
+    <div class="weather-main">
+      <div>
         <small>AQI</small>
         <strong id="weatherAQI">--</strong>
         <span id="weatherStatus">Memuat...</span>
       </div>
 
-      <div class="weather-temperature">
+      <div class="weather-temp">
         <strong id="weatherTemp">--°C</strong>
-        <small>Suhu saat ini</small>
       </div>
     </div>
 
-    <div class="weather-grid">
-
-      <div class="weather-tile">
-        <span class="weather-tile-icon">☀</span>
-        <small>UV</small>
-        <strong id="weatherUV">--</strong>
-        <b id="weatherUVStatus">Memuat</b>
+    <div class="weather-info-grid">
+      <div>
+        <small>PM2.5</small>
+        <strong id="weatherPM25">-- µg/m³</strong>
       </div>
 
-      <div class="weather-tile">
-        <span class="weather-tile-icon">♨</span>
-        <small>Terasa seperti</small>
-        <strong id="weatherFeels">--°</strong>
-      </div>
-
-      <div class="weather-tile">
-        <span class="weather-tile-icon">◒</span>
-        <small>Kelembapan</small>
+      <div>
+        <small>KELEMBAPAN</small>
         <strong id="weatherHumidity">--%</strong>
       </div>
 
-      <div class="weather-tile">
-        <span class="weather-tile-icon">≋</span>
-        <small>Angin</small>
+      <div>
+        <small>ANGIN</small>
         <strong id="weatherWind">-- km/j</strong>
       </div>
 
-      <div class="weather-tile">
-        <span class="weather-tile-icon">↕</span>
-        <small>Tekanan udara</small>
+      <div>
+        <small>TEKANAN</small>
         <strong id="weatherPressure">-- hPa</strong>
       </div>
-
-      <div class="weather-tile">
-        <span class="weather-tile-icon">◉</span>
-        <small>Visibilitas</small>
-        <strong id="weatherVisibility">-- km</strong>
-      </div>
-
     </div>
 
-    <div class="sun-card">
-
-      <div class="sun-side">
-        <span>☼</span>
-        <small>Terbenam</small>
-        <strong id="weatherSunset">--:--</strong>
-      </div>
-
-      <div class="sun-track">
-        <div class="sun-line"></div>
-        <div class="sun-ball">☾</div>
-      </div>
-
-      <div class="sun-side right">
-        <span>☼</span>
-        <small>Terbit</small>
-        <strong id="weatherSunrise">--:--</strong>
-      </div>
-
-    </div>
-
-    <div class="weather-advice">
-      <div class="weather-advice-head">
-        <div>
-          <small>INFORMASI UDARA</small>
-          <strong>Kondisi saat ini</strong>
-        </div>
-        <span>›</span>
-      </div>
-
-      <div class="weather-advice-grid">
-
-        <div>
-          <span>◉</span>
-          <small>PM2.5</small>
-          <strong id="weatherPM25">-- µg/m³</strong>
-        </div>
-
-        <div>
-          <span>☁</span>
-          <small>Kondisi</small>
-          <strong id="weatherCondition">Memuat...</strong>
-        </div>
-
-        <div>
-          <span>↻</span>
-          <small>Pembaruan</small>
-          <strong id="weatherUpdated">Memuat...</strong>
-        </div>
-
-      </div>
-    </div>
-
+    <p id="weatherUpdated">Memuat data IQAir...</p>
   </div>
-
 </section>
 
 <section class="page" id="profile">
@@ -628,7 +436,7 @@
   <button class="nav active" data-page="home"><i>⌂</i><span>Home</span></button>
   <button class="nav" data-page="products"><i>✿</i><span>Katalog</span></button>
   <button class="nav nav-prayer" data-page="prayer"><i>🕌</i><span>Salat</span></button>
-  <button class="nav" data-page="tools"><i>🧰</i><span>Tools</span></button>
+  <button class="nav" data-page="weather"><i>☁</i><span>Cuaca</span></button>
   <button class="nav" data-page="profile"><i>♡</i><span>Toko</span></button>
 </nav>
 </div>
@@ -752,31 +560,6 @@
 <div id="toast" class="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
-<script>
-(function(){
-  document.addEventListener("click", function(e){
-
-    const tool = e.target.closest("[data-tool]");
-    if(!tool) return;
-
-    const type = tool.dataset.tool;
-
-    if(type === "weather"){
-      if(typeof go === "function"){
-        go("weather");
-      }
-      return;
-    }
-
-    if(type === "tiktok"){
-      
-      return;
-    }
-
-  });
-})();
-</script>
-
 <script id="directOwnerLogin">
 (function(){
 
@@ -989,51 +772,5 @@ btn.onclick=function(){
 
 })();
 </script>
-
-<section class="tiktok-downloader">
-  <h2>TikTok Downloader</h2>
-  <div class="tiktok-subtitle">
-    Tempel link TikTok untuk melihat preview dan download MP4.
-  </div>
-
-  <div class="tiktok-input-row">
-    <input
-      id="rvTikTokUrl"
-      type="text"
-      placeholder="Tempel link TikTok..."
-      autocomplete="off"
-    >
-    <button id="rvTikTokPreview">Lihat</button>
-  </div>
-
-  <div id="rvTikTokError" class="tiktok-error" hidden></div>
-
-  <div id="rvTikTokPreviewBox" class="tiktok-preview" hidden>
-
-    <div class="tiktok-thumb">
-      <img id="rvTikTokThumb" alt="Thumbnail TikTok">
-      <div class="tiktok-play">▶</div>
-    </div>
-
-    <div id="rvTikTokTitle" class="tiktok-title">
-      Video TikTok
-    </div>
-
-    <div id="rvTikTokAuthor" class="tiktok-author"></div>
-
-    <button id="rvTikTokDownload" class="tiktok-download-btn">
-      Download MP4
-    </button>
-
-    <div id="rvTikTokLoading" class="tiktok-loading" hidden>
-      <div class="tiktok-loading-track">
-        <div class="tiktok-loading-bar"></div>
-      </div>
-      Mengunduh video...
-    </div>
-
-  </div>
-</section>
-
 </body>
 </html>
