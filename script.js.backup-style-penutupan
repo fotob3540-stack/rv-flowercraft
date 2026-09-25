@@ -522,3 +522,924 @@ loadPrayerData();
     });
 
 })();
+
+
+/* =========================================================
+   RV FLOWERCRAFT - PENUTUPAN MODERN V2
+========================================================= */
+
+(function(){
+
+  const closure =
+    document.getElementById("temporaryClosure");
+
+  const box =
+    closure && closure.querySelector(".closure-box");
+
+  if(!closure || !box) return;
+
+
+  /* ======================================================
+     TAMBAHKAN BRAND + PESAN
+  ====================================================== */
+
+  const oldTitle = box.querySelector("h1");
+
+  if(oldTitle){
+
+    oldTitle.innerHTML =
+      "🔒 WEB SEMENTARA<br>DITUTUP";
+
+  }
+
+
+  if(!box.querySelector(".closure-brand")){
+
+    const brand = document.createElement("div");
+
+    brand.className = "closure-brand";
+
+    brand.innerHTML =
+      "🌸 RV FLOWERCRAFT";
+
+    box.insertBefore(
+      brand,
+      oldTitle
+    );
+
+  }
+
+
+  if(!box.querySelector(".closure-subtitle")){
+
+    const subtitle =
+      document.createElement("div");
+
+    subtitle.className =
+      "closure-subtitle";
+
+    subtitle.innerHTML =
+      "Web RV FLOWERCRAFT sudah ditutup sementara. 💐<br>" +
+      "Silahkan tinggalkan pesan untuk admin. 💌";
+
+    const textarea =
+      document.getElementById("closureMessage");
+
+    box.insertBefore(
+      subtitle,
+      textarea
+    );
+
+  }
+
+
+  if(!box.querySelector(".closure-decoration")){
+
+    const decoration =
+      document.createElement("div");
+
+    decoration.className =
+      "closure-decoration";
+
+    decoration.innerHTML =
+      "🌸 💐 🌷 🌹 🌼";
+
+    box.appendChild(decoration);
+
+  }
+
+
+  /* ======================================================
+     EMOJI PADA INPUT
+  ====================================================== */
+
+  const textarea =
+    document.getElementById("closureMessage");
+
+  if(textarea){
+
+    textarea.placeholder =
+      "💌 Tulis pesan untuk admin di sini...";
+
+  }
+
+
+  const send =
+    document.getElementById("closureSend");
+
+  if(send){
+
+    send.innerHTML =
+      "💌 KIRIMKAN PESAN KE ADMIN";
+
+  }
+
+
+  const view =
+    document.getElementById("closureView");
+
+  if(view){
+
+    view.innerHTML =
+      "🔐 lihat pesan";
+
+  }
+
+
+  /* ======================================================
+     PENUTUPAN MUNCUL SETELAH LOADING
+  ====================================================== */
+
+  closure.style.display = "none";
+
+
+  function showClosure(){
+
+    closure.style.display = "flex";
+
+  }
+
+
+  function loaderFinished(){
+
+    const loader =
+      document.getElementById("loader");
+
+    if(!loader){
+
+      showClosure();
+
+      return true;
+
+    }
+
+    const style =
+      window.getComputedStyle(loader);
+
+    const hidden =
+      style.display === "none" ||
+      style.visibility === "hidden" ||
+      parseFloat(style.opacity || "1") <= 0 ||
+      loader.classList.contains("hidden") ||
+      loader.classList.contains("hide") ||
+      loader.classList.contains("loaded");
+
+    if(hidden){
+
+      showClosure();
+
+      return true;
+
+    }
+
+    return false;
+
+  }
+
+
+  /* cek terus sampai loader selesai */
+
+  const checker =
+    setInterval(function(){
+
+      if(loaderFinished()){
+
+        clearInterval(checker);
+
+      }
+
+    },250);
+
+
+  /* fallback */
+
+  window.addEventListener("load",function(){
+
+    setTimeout(function(){
+
+      if(!document.getElementById("loader")){
+
+        showClosure();
+
+      }
+
+    },1000);
+
+  });
+
+
+})();
+
+
+/* =========================================================
+   RV FLOWERCRAFT - CLOSURE MEGA EFFECTS
+========================================================= */
+
+(function(){
+
+  const PASSWORD = "raffi1212";
+
+  const closure =
+    document.getElementById("temporaryClosure");
+
+  if(!closure) return;
+
+
+  /* ======================================================
+     LANGIT
+  ====================================================== */
+
+  let sky =
+    closure.querySelector(".closure-sky");
+
+  if(!sky){
+
+    sky = document.createElement("div");
+
+    sky.className = "closure-sky";
+
+    closure.prepend(sky);
+
+  }
+
+
+  /* AWAN */
+
+  ["c1","c2","c3"].forEach(function(c){
+
+    const cloud =
+      document.createElement("div");
+
+    cloud.className =
+      "closure-cloud " + c;
+
+    sky.appendChild(cloud);
+
+  });
+
+
+  /* BUNGA */
+
+  const flowers =
+    ["🌸","🌷","🌹","🌼","🌺","💮","🌻"];
+
+  for(let i=0;i<12;i++){
+
+    const flower =
+      document.createElement("div");
+
+    flower.className =
+      "closure-flower";
+
+    flower.textContent =
+      flowers[
+        Math.floor(
+          Math.random()*flowers.length
+        )
+      ];
+
+    flower.style.top =
+      (8 + Math.random()*55) + "%";
+
+    flower.style.animationDuration =
+      (9 + Math.random()*12) + "s";
+
+    flower.style.animationDelay =
+      (-Math.random()*15) + "s";
+
+    flower.style.fontSize =
+      (15 + Math.random()*17) + "px";
+
+    sky.appendChild(flower);
+
+  }
+
+
+  /* KELAP KELIP */
+
+  for(let i=0;i<18;i++){
+
+    const spark =
+      document.createElement("div");
+
+    spark.className =
+      "closure-spark";
+
+    spark.textContent =
+      Math.random() > .5
+      ? "✨"
+      : "⭐";
+
+    spark.style.left =
+      Math.random()*100 + "%";
+
+    spark.style.top =
+      Math.random()*70 + "%";
+
+    spark.style.animationDelay =
+      (-Math.random()*3) + "s";
+
+    sky.appendChild(spark);
+
+  }
+
+
+  /* JALAN */
+
+  const road =
+    document.createElement("div");
+
+  road.className =
+    "closure-road";
+
+  sky.appendChild(road);
+
+
+  /* MOBIL */
+
+  const car =
+    document.createElement("div");
+
+  car.className =
+    "closure-car";
+
+  car.textContent = "🚗";
+
+  sky.appendChild(car);
+
+
+  /* ORANG */
+
+  const person1 =
+    document.createElement("div");
+
+  person1.className =
+    "closure-person p1";
+
+  person1.textContent = "🧍";
+
+  sky.appendChild(person1);
+
+
+  const person2 =
+    document.createElement("div");
+
+  person2.className =
+    "closure-person p2";
+
+  person2.textContent = "🚶";
+
+  sky.appendChild(person2);
+
+
+  /* ======================================================
+     PASSWORD BARU
+  ====================================================== */
+
+  const unlock =
+    document.getElementById("closureUnlock");
+
+  const password =
+    document.getElementById("closurePassword");
+
+  const error =
+    document.getElementById("closureError");
+
+  if(unlock){
+
+    /* Hapus listener lama dengan clone */
+
+    const newUnlock =
+      unlock.cloneNode(true);
+
+    unlock.parentNode.replaceChild(
+      newUnlock,
+      unlock
+    );
+
+
+    newUnlock.addEventListener(
+      "click",
+      function(){
+
+        if(password.value === PASSWORD){
+
+          document
+            .getElementById("closureLogin")
+            .classList.remove("show");
+
+          document
+            .getElementById("closureInbox")
+            .classList.add("show");
+
+          if(typeof window.renderClosureMessages === "function"){
+            window.renderClosureMessages();
+          }
+
+        }else{
+
+          error.textContent =
+            "❌ Password salah.";
+
+          password.select();
+
+        }
+
+      }
+    );
+
+  }
+
+
+  /* ======================================================
+     NAMA PENGIRIM
+  ====================================================== */
+
+  const sender =
+    document.getElementById("closureSender");
+
+  const message =
+    document.getElementById("closureMessage");
+
+  const send =
+    document.getElementById("closureSend");
+
+
+  if(send){
+
+    const newSend =
+      send.cloneNode(true);
+
+    send.parentNode.replaceChild(
+      newSend,
+      send
+    );
+
+
+    newSend.innerHTML =
+      "💌 KIRIMKAN PESAN KE ADMIN";
+
+
+    newSend.addEventListener(
+      "click",
+      function(){
+
+        const name =
+          sender
+          ? sender.value.trim()
+          : "";
+
+        const text =
+          message
+          ? message.value.trim()
+          : "";
+
+
+        if(!name){
+
+          alert(
+            "👤 Silahkan isi nama kamu terlebih dahulu."
+          );
+
+          if(sender) sender.focus();
+
+          return;
+
+        }
+
+
+        if(!text){
+
+          alert(
+            "💌 Silahkan tulis pesan terlebih dahulu."
+          );
+
+          if(message) message.focus();
+
+          return;
+
+        }
+
+
+        const key =
+          "rv_flowercraft_closure_messages";
+
+        let data = [];
+
+        try{
+
+          data =
+            JSON.parse(
+              localStorage.getItem(key) || "[]"
+            );
+
+        }catch(e){}
+
+
+        data.unshift({
+
+          name:name,
+
+          text:text,
+
+          time:
+            new Date().toISOString()
+
+        });
+
+
+        localStorage.setItem(
+          key,
+          JSON.stringify(data)
+        );
+
+
+        sender.value = "";
+
+        message.value = "";
+
+
+        alert(
+          "🌸 Pesan berhasil dikirim ke admin! 💌"
+        );
+
+      }
+    );
+
+  }
+
+
+  /* ======================================================
+     RENDER PESAN DENGAN NAMA
+  ====================================================== */
+
+  window.renderClosureMessages =
+    function(){
+
+      const container =
+        document.getElementById(
+          "closureMessages"
+        );
+
+      if(!container) return;
+
+
+      let data = [];
+
+      try{
+
+        data =
+          JSON.parse(
+            localStorage.getItem(
+              "rv_flowercraft_closure_messages"
+            ) || "[]"
+          );
+
+      }catch(e){}
+
+
+      if(!data.length){
+
+        container.innerHTML =
+          '<div class="closure-message">📭 Belum ada pesan.</div>';
+
+        return;
+
+      }
+
+
+      container.innerHTML =
+        data.map(function(item){
+
+          const name =
+            String(item.name || "Anonim")
+            .replace(/&/g,"&amp;")
+            .replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;");
+
+          const text =
+            String(item.text || "")
+            .replace(/&/g,"&amp;")
+            .replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;");
+
+
+          return `
+            <div class="closure-message">
+
+              <div class="closure-date">
+                👤 <b>${name}</b>
+                <br>
+                🕒 ${new Date(item.time).toLocaleString("id-ID")}
+              </div>
+
+              💌 ${text}
+
+            </div>
+          `;
+
+        }).join("");
+
+    };
+
+
+})();
+
+
+/* RV_FLOWERCRAFT_CLOSURE_JS_START */
+
+(function () {
+
+  const CLOSURE_PASSWORD = "raffi1212";
+  const STORAGE_KEY = "rv_flowercraft_closure_messages";
+
+  const $ = (id) => document.getElementById(id);
+
+  const closure = $("temporaryClosure");
+  const sender = $("closureSender");
+  const message = $("closureMessage");
+  const sendBtn = $("closureSend");
+  const viewBtn = $("closureView");
+
+  const login = $("closureLogin");
+  const inbox = $("closureInbox");
+
+  const password = $("closurePassword");
+  const unlock = $("closureUnlock");
+  const error = $("closureError");
+
+  const messagesBox = $("closureMessages");
+  const loginClose = $("closureLoginClose");
+  const inboxClose = $("closureInboxClose");
+  const clearBtn = $("closureClear");
+
+  if (!closure) return;
+
+  function getMessages() {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      const parsed = data ? JSON.parse(data) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveMessages(list) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  function escapeHTML(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function renderMessages() {
+
+    const list = getMessages();
+
+    if (!messagesBox) return;
+
+    if (!list.length) {
+      messagesBox.innerHTML =
+        '<div class="rv-empty-message">Belum ada pesan masuk.</div>';
+      return;
+    }
+
+    messagesBox.innerHTML = list
+      .slice()
+      .reverse()
+      .map((item) => {
+
+        const date = new Date(item.time);
+
+        const dateText = isNaN(date.getTime())
+          ? "-"
+          : date.toLocaleString("id-ID", {
+              dateStyle: "medium",
+              timeStyle: "short"
+            });
+
+        return `
+          <div class="rv-message-item">
+            <div class="rv-message-name">
+              ${escapeHTML(item.name || "Tanpa nama")}
+            </div>
+
+            <div class="rv-message-date">
+              ${escapeHTML(dateText)}
+            </div>
+
+            <div class="rv-message-content">
+              ${escapeHTML(item.message || "")}
+            </div>
+          </div>
+        `;
+
+      })
+      .join("");
+  }
+
+  function openLogin() {
+
+    if (!login) return;
+
+    password.value = "";
+    error.textContent = "";
+    login.classList.add("rv-modal-show");
+
+    setTimeout(() => {
+      password.focus();
+    }, 100);
+
+  }
+
+  function closeLogin() {
+
+    if (login) {
+      login.classList.remove("rv-modal-show");
+    }
+
+  }
+
+  function openInbox() {
+
+    if (!inbox) return;
+
+    renderMessages();
+
+    inbox.classList.add("rv-modal-show");
+
+  }
+
+  function closeInbox() {
+
+    if (inbox) {
+      inbox.classList.remove("rv-modal-show");
+    }
+
+  }
+
+  if (sendBtn) {
+
+    sendBtn.addEventListener("click", function () {
+
+      const name = sender.value.trim();
+      const text = message.value.trim();
+
+      if (!name) {
+        sender.focus();
+        sender.style.borderColor = "#b77d72";
+
+        setTimeout(() => {
+          sender.style.borderColor = "";
+        }, 1200);
+
+        return;
+      }
+
+      if (!text) {
+        message.focus();
+        message.style.borderColor = "#b77d72";
+
+        setTimeout(() => {
+          message.style.borderColor = "";
+        }, 1200);
+
+        return;
+      }
+
+      const list = getMessages();
+
+      list.push({
+        name: name,
+        message: text,
+        time: new Date().toISOString()
+      });
+
+      saveMessages(list);
+
+      sender.value = "";
+      message.value = "";
+
+      sendBtn.textContent = "Pesan Terkirim";
+
+      setTimeout(() => {
+        sendBtn.textContent = "Kirim Pesan";
+      }, 1600);
+
+    });
+
+  }
+
+  if (viewBtn) {
+    viewBtn.addEventListener("click", openLogin);
+  }
+
+  if (loginClose) {
+    loginClose.addEventListener("click", closeLogin);
+  }
+
+  if (inboxClose) {
+    inboxClose.addEventListener("click", closeInbox);
+  }
+
+  if (unlock) {
+
+    unlock.addEventListener("click", function () {
+
+      if (password.value === CLOSURE_PASSWORD) {
+
+        closeLogin();
+        openInbox();
+
+      } else {
+
+        error.textContent = "Password tidak sesuai.";
+        password.value = "";
+        password.focus();
+
+      }
+
+    });
+
+  }
+
+  if (password) {
+
+    password.addEventListener("keydown", function (event) {
+
+      if (event.key === "Enter" && unlock) {
+        unlock.click();
+      }
+
+    });
+
+  }
+
+  if (clearBtn) {
+
+    clearBtn.addEventListener("click", function () {
+
+      const list = getMessages();
+
+      if (!list.length) return;
+
+      if (confirm("Hapus semua pesan?")) {
+
+        localStorage.removeItem(STORAGE_KEY);
+        renderMessages();
+
+      }
+
+    });
+
+  }
+
+  [login, inbox].forEach((modal) => {
+
+    if (!modal) return;
+
+    modal.addEventListener("click", function (event) {
+
+      if (event.target === modal) {
+        modal.classList.remove("rv-modal-show");
+      }
+
+    });
+
+  });
+
+  function showClosure() {
+
+    closure.classList.add("rv-show");
+
+    document.body.classList.add("rv-closure-active");
+
+  }
+
+  /*
+   * Tampilkan setelah halaman selesai loading.
+   * Delay kecil supaya halaman utama/loader tetap sempat muncul.
+   */
+  function startClosure() {
+
+    setTimeout(showClosure, 1600);
+
+  }
+
+  if (document.readyState === "complete") {
+    startClosure();
+  } else {
+    window.addEventListener("load", startClosure, {
+      once: true
+    });
+  }
+
+})();
+
+/* RV_FLOWERCRAFT_CLOSURE_JS_END */

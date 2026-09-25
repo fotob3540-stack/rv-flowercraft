@@ -1443,3 +1443,210 @@ loadPrayerData();
 })();
 
 /* RV_FLOWERCRAFT_CLOSURE_JS_END */
+
+
+/* =========================================================
+   RV FLOWERCRAFT - PENUTUPAN MODERN V2
+========================================================= */
+
+(function(){
+
+  const closure =
+    document.getElementById("temporaryClosure");
+
+  const box =
+    closure && closure.querySelector(".closure-box");
+
+  if(!closure || !box) return;
+
+
+  /* ======================================================
+     TAMBAHKAN BRAND + PESAN
+  ====================================================== */
+
+  const oldTitle = box.querySelector("h1");
+
+  if(oldTitle){
+
+    oldTitle.innerHTML =
+      "🔒 WEB SEMENTARA<br>DITUTUP";
+
+  }
+
+
+  if(!box.querySelector(".closure-brand")){
+
+    const brand = document.createElement("div");
+
+    brand.className = "closure-brand";
+
+    brand.innerHTML =
+      "🌸 RV FLOWERCRAFT";
+
+    box.insertBefore(
+      brand,
+      oldTitle
+    );
+
+  }
+
+
+  if(!box.querySelector(".closure-subtitle")){
+
+    const subtitle =
+      document.createElement("div");
+
+    subtitle.className =
+      "closure-subtitle";
+
+    subtitle.innerHTML =
+      "Web RV FLOWERCRAFT sudah ditutup sementara. 💐<br>" +
+      "Silahkan tinggalkan pesan untuk admin. 💌";
+
+    const textarea =
+      document.getElementById("closureMessage");
+
+    box.insertBefore(
+      subtitle,
+      textarea
+    );
+
+  }
+
+
+  if(!box.querySelector(".closure-decoration")){
+
+    const decoration =
+      document.createElement("div");
+
+    decoration.className =
+      "closure-decoration";
+
+    decoration.innerHTML =
+      "🌸 💐 🌷 🌹 🌼";
+
+    box.appendChild(decoration);
+
+  }
+
+
+  /* ======================================================
+     EMOJI PADA INPUT
+  ====================================================== */
+
+  const textarea =
+    document.getElementById("closureMessage");
+
+  if(textarea){
+
+    textarea.placeholder =
+      "💌 Tulis pesan untuk admin di sini...";
+
+  }
+
+
+  const send =
+    document.getElementById("closureSend");
+
+  if(send){
+
+    send.innerHTML =
+      "💌 KIRIMKAN PESAN KE ADMIN";
+
+  }
+
+
+  const view =
+    document.getElementById("closureView");
+
+  if(view){
+
+    view.innerHTML =
+      "🔐 lihat pesan";
+
+  }
+
+
+  /* ======================================================
+     PENUTUPAN MUNCUL SETELAH LOADING
+  ====================================================== */
+
+  closure.style.display = "none";
+
+
+  function showClosure(){
+
+    closure.style.display = "flex";
+
+  }
+
+
+  function loaderFinished(){
+
+    const loader =
+      document.getElementById("loader");
+
+    if(!loader){
+
+      showClosure();
+
+      return true;
+
+    }
+
+    const style =
+      window.getComputedStyle(loader);
+
+    const hidden =
+      style.display === "none" ||
+      style.visibility === "hidden" ||
+      parseFloat(style.opacity || "1") <= 0 ||
+      loader.classList.contains("hidden") ||
+      loader.classList.contains("hide") ||
+      loader.classList.contains("loaded");
+
+    if(hidden){
+
+      showClosure();
+
+      return true;
+
+    }
+
+    return false;
+
+  }
+
+
+  /* cek terus sampai loader selesai */
+
+  const checker =
+    setInterval(function(){
+
+      if(loaderFinished()){
+
+        clearInterval(checker);
+
+      }
+
+    },250);
+
+
+  /* fallback */
+
+  window.addEventListener("load",function(){
+
+    setTimeout(function(){
+
+      if(!document.getElementById("loader")){
+
+        showClosure();
+
+      }
+
+    },1000);
+
+  });
+
+
+})();

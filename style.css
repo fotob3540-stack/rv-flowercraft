@@ -5351,3 +5351,308 @@ body.theme-dark #ai .skybot-input-box {
 }
 
 /* RV_FLOWERCRAFT_NATURAL_CLOSURE_END */
+
+
+/* =========================================================
+   RV FLOWERCRAFT - PENUTUPAN MODERN V2
+========================================================= */
+
+#temporaryClosure{
+  background:
+    radial-gradient(circle at 15% 15%, rgba(255,182,193,.22), transparent 28%),
+    radial-gradient(circle at 85% 20%, rgba(221,160,221,.18), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(255,214,224,.25), transparent 35%),
+    #fff;
+
+  backdrop-filter: blur(12px);
+
+  padding:30px 20px 80px;
+
+  align-items:center;
+
+  overflow-y:auto;
+}
+
+.closure-box{
+  width:min(620px,100%);
+  text-align:center;
+
+  padding:30px 22px;
+
+  border:1px solid rgba(255,255,255,.8);
+
+  border-radius:30px;
+
+  background:rgba(255,255,255,.70);
+
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.10),
+    inset 0 1px 0 rgba(255,255,255,.9);
+
+  backdrop-filter:blur(25px);
+}
+
+.closure-box h1{
+  margin:0;
+
+  font-size:clamp(38px,8vw,70px);
+
+  line-height:.95;
+
+  font-weight:950;
+
+  letter-spacing:-2px;
+
+  color:#111;
+
+  text-shadow:
+    0 3px 15px rgba(0,0,0,.08);
+}
+
+/* SUBTITLE BARU */
+
+.closure-subtitle{
+  margin:18px auto 24px;
+
+  max-width:500px;
+
+  font-size:17px;
+
+  line-height:1.55;
+
+  color:#555;
+}
+
+.closure-brand{
+  display:inline-flex;
+
+  align-items:center;
+
+  gap:8px;
+
+  margin-bottom:12px;
+
+  padding:8px 15px;
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,.85);
+
+  border:1px solid rgba(0,0,0,.08);
+
+  box-shadow:0 8px 25px rgba(0,0,0,.06);
+
+  font-size:14px;
+
+  font-weight:800;
+
+  letter-spacing:.5px;
+}
+
+
+/* KOTAK PESAN DIPERKECIL */
+
+#closureMessage{
+  width:100%;
+
+  height:210px;
+
+  min-height:180px;
+
+  max-height:300px;
+
+  resize:vertical;
+
+  box-sizing:border-box;
+
+  border:2px solid rgba(0,0,0,.12);
+
+  border-radius:22px;
+
+  padding:20px;
+
+  background:rgba(255,255,255,.88);
+
+  color:#222;
+
+  font-size:16px;
+
+  line-height:1.5;
+
+  font-family:inherit;
+
+  outline:none;
+
+  box-shadow:
+    inset 0 2px 10px rgba(0,0,0,.025),
+    0 8px 30px rgba(0,0,0,.05);
+
+  transition:
+    border .25s ease,
+    box-shadow .25s ease,
+    transform .25s ease;
+}
+
+#closureMessage::placeholder{
+  color:#999;
+}
+
+#closureMessage:focus{
+  border-color:rgba(0,0,0,.35);
+
+  box-shadow:
+    0 0 0 5px rgba(0,0,0,.04),
+    0 15px 35px rgba(0,0,0,.08);
+
+  transform:translateY(-2px);
+}
+
+
+/* TOMBOL KIRIM */
+
+#closureSend{
+  width:100%;
+
+  margin-top:15px;
+
+  padding:15px 20px;
+
+  border:0;
+
+  border-radius:17px;
+
+  background:#111;
+
+  color:#fff;
+
+  font-size:15px;
+
+  font-weight:800;
+
+  letter-spacing:.2px;
+
+  cursor:pointer;
+
+  box-shadow:0 12px 28px rgba(0,0,0,.16);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+#closureSend:hover{
+  transform:translateY(-2px);
+
+  box-shadow:0 16px 35px rgba(0,0,0,.20);
+}
+
+#closureSend:active{
+  transform:scale(.98);
+}
+
+
+/* LIHAT PESAN */
+
+#closureView{
+  right:22px;
+
+  bottom:15px;
+
+  padding:8px 13px;
+
+  border-radius:999px;
+
+  background:rgba(255,255,255,.75);
+
+  box-shadow:0 6px 20px rgba(0,0,0,.08);
+
+  font-size:13px;
+
+  font-weight:600;
+
+  opacity:.7;
+
+  backdrop-filter:blur(12px);
+
+  transition:.2s ease;
+}
+
+#closureView:hover{
+  opacity:1;
+
+  transform:translateY(-2px);
+}
+
+
+/* DEKORASI EMOJI */
+
+.closure-decoration{
+  margin-top:20px;
+
+  font-size:23px;
+
+  letter-spacing:8px;
+
+  animation:closureFloat 3s ease-in-out infinite;
+}
+
+@keyframes closureFloat{
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-5px);
+  }
+}
+
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+  #temporaryClosure{
+    padding:20px 15px 75px;
+  }
+
+  .closure-box{
+    padding:25px 17px;
+
+    border-radius:25px;
+  }
+
+  .closure-box h1{
+    font-size:clamp(36px,10vw,55px);
+  }
+
+  .closure-subtitle{
+    font-size:15px;
+
+    margin:15px auto 20px;
+  }
+
+  #closureMessage{
+    height:190px;
+
+    min-height:160px;
+
+    padding:17px;
+
+    border-radius:18px;
+
+    font-size:15px;
+  }
+
+  #closureSend{
+    border-radius:15px;
+
+    padding:14px;
+  }
+
+  #closureView{
+    right:14px;
+
+    bottom:10px;
+  }
+
+}
