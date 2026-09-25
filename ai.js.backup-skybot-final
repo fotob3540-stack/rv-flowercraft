@@ -1,0 +1,352 @@
+/*
+  RV FLOWERCRAFT — SKYBOT
+  Groq  = chat
+  Puter = AI image generation
+*/
+
+(function () {
+  "use strict";
+
+  const input = document.getElementById("skybotInput");
+  const sendBtn = document.getElementById("skybotSend");
+  const micBtn = document.getElementById("skybotMic");
+  const plusBtn = document.getElementById("skybotPlus");
+  const plusMenu = document.getElementById("skybotPlusMenu");
+  const fileInput = document.getElementById("skybotFile");
+
+  if (!input || !sendBtn) {
+    console.warn("SkyBot: elemen input belum ditemukan.");
+    return;
+  }
+
+  let selectedFile = null;
+
+  function getChatBox() {
+    return (
+      document.getElementById("skybotMessages") ||
+      document.querySelector(".ai-messages") ||
+      document.querySelector(".chat-messages")
+    );
+  }
+
+  function addMessage(text, type = "bot") {
+    const box = getChatBox();
+    if (!box) return;
+
+    const item = document.createElement("div");
+    item.className =
+      "skybot-message " +
+      (type === "user" ? "skybot-user" : "skybot-bot");
+
+    item.innerHTML = `
+      <div class="skybot-avatar">
+        ${type === "user" ? "👤" : "🤖"}
+      </div>
+      <div class="skybot-bubble"></div>
+    `;
+
+    item.querySelector(".skybot-bubble").textContent = text;
+    box.appendChild(item);
+
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function addImage(src, prompt) {
+    const box = getChatBox();
+    if (!box) return;
+
+    const item = document.createElement("div");
+    item.className = "skybot-message skybot-bot";
+
+    item.innerHTML = `
+      <div class="skybot-avatar">🎨</div>
+      <div class="skybot-bubble skybot-image-result">
+        <div>Gambar AI untuk:</div>
+        <strong>${escapeHtml(prompt)}</strong>
+        <img src="${src}" alt="${escapeHtml(prompt)}">
+      </div>
+    `;
+
+    box.appendChild(item);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function isImageRequest(text) {
+    const t = text.toLowerCase();
+
+    const words = [
+      "buat gambar",
+      "buatkan gambar",
+      "bikin gambar",
+      "buat foto",
+      "buatkan foto",
+      "generate gambar",
+      "generate image",
+      "gambar ai",
+      "image ai",
+      "hasilkan gambar",
+      "lukiskan",
+      "gambarkan"
+    ];
+
+    return words.some(word => t.includes(word));
+  }
+
+  async function generateImage(prompt) {
+    addMessage("SkyBot sedang membuat gambar... 🎨", "bot");
+
+    try {
+      if (typeof puter === "undefined" || !puter.ai) {
+        throw new Error("Puter.js belum tersedia.");
+      }
+
+      const image = await puter.ai.txt2img(prompt);
+
+      const box = getChatBox();
+
+      if (box) {
+        const last = box.lastElementChild;
+
+        if (
+          last &&
+          last.querySelector(".skybot-bubble") &&
+          last.textContent.includes("sedang membuat gambar")
+        ) {
+          last.remove();
+        }
+      }
+
+      if (image) {
+        let src = "";
+
+        if (typeof image === "string") {
+          src = image;
+        } else if (image.src) {
+          src = image.src;
+        } else if (image.url) {
+          src = image.url;
+        }
+
+        if (src) {
+          addImage(src, prompt);
+          return;
+        }
+      }
+
+      throw new Error("Puter tidak mengembalikan gambar.");
+    } catch (error) {
+      console.error("Puter image error:", error);
+      addMessage(
+        "Maaf, gambar belum berhasil dibuat. Coba gunakan prompt yang lebih sederhana.",
+        "bot"
+      );
+    }
+  }
+
+  async function sendToGroq(text) {
+    addMessage(text, "user");
+
+    const thinking = document.createElement("div");
+    thinking.className = "skybot-message skybot-bot skybot-thinking";
+    thinking.innerHTML = `
+      <div class="skybot-avatar">🤖</div>
+      <div class="skybot-bubble">SkyBot sedang berpikir<span class="dots">...</span></div>
+    `;
+
+    const box = getChatBox();
+
+    if (box) {
+      box.appendChild(thinking);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    try {
+      const response = await fetch("/api/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: "user",
+              content: text
+            }
+          ]
+        })
+      });
+
+      const data = await response.json();
+
+      if (thinking.parentNode) {
+        thinking.remove();
+      }
+
+      if (!response.ok || !data.answer) {
+        throw new Error(data.error || "AI tidak memberikan jawaban.");
+      }
+
+      addMessage(data.answer, "bot");
+
+    } catch (error) {
+      console.error("SkyBot error:", error);
+
+      if (thinking.parentNode) {
+        thinking.remove();
+      }
+
+      addMessage(
+        "Maaf, SkyBot sedang tidak bisa terhubung. Coba lagi sebentar.",
+        "bot"
+      );
+    }
+  }
+
+  async function sendMessage() {
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    input.value = "";
+
+    if (selectedFile) {
+      addMessage(
+        "File dipilih: " + selectedFile.name,
+        "user"
+      );
+
+      selectedFile = null;
+      fileInput.value = "";
+    }
+
+    if (isImageRequest(text)) {
+      addMessage(text, "user");
+      await generateImage(text);
+    } else {
+      await sendToGroq(text);
+    }
+  }
+
+  sendBtn.addEventListener("click", sendMessage);
+
+  input.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  });
+
+  if (plusBtn && plusMenu) {
+    plusBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
+
+      plusMenu.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function () {
+      plusMenu.classList.remove("show");
+    });
+
+    plusMenu.addEventListener("click", function (event) {
+      event.stopPropagation();
+    });
+  }
+
+  if (fileInput) {
+    fileInput.addEventListener("change", function () {
+      if (this.files && this.files[0]) {
+        selectedFile = this.files[0];
+        input.placeholder = selectedFile.name;
+      }
+    });
+  }
+
+  const photoBtn = document.getElementById("skybotPhoto");
+
+  if (photoBtn && fileInput) {
+    photoBtn.addEventListener("click", function () {
+      fileInput.accept = "image/*";
+      fileInput.click();
+    });
+  }
+
+  const genericFileBtn = document.getElementById("skybotFileBtn");
+
+  if (genericFileBtn && fileInput) {
+    genericFileBtn.addEventListener("click", function () {
+      fileInput.accept = "*/*";
+      fileInput.click();
+    });
+  }
+
+  const imageBtn = document.getElementById("skybotImage");
+
+  if (imageBtn) {
+    imageBtn.addEventListener("click", function () {
+      input.focus();
+      input.placeholder = "Tulis prompt gambar AI...";
+      if (plusMenu) plusMenu.classList.remove("show");
+    });
+  }
+
+  /*
+    MICROPHONE
+  */
+
+  if (micBtn) {
+    const SpeechRecognition =
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      micBtn.addEventListener("click", function () {
+        addMessage(
+          "Fitur suara belum didukung browser ini.",
+          "bot"
+        );
+      });
+    } else {
+      const recognition = new SpeechRecognition();
+
+      recognition.lang = "id-ID";
+      recognition.interimResults = false;
+      recognition.continuous = false;
+
+      micBtn.addEventListener("click", function () {
+        try {
+          recognition.start();
+          micBtn.classList.add("recording");
+          micBtn.textContent = "🔴";
+        } catch (e) {}
+      });
+
+      recognition.onresult = function (event) {
+        const transcript =
+          event.results[0][0].transcript;
+
+        input.value =
+          input.value.trim() +
+          (input.value.trim() ? " " : "") +
+          transcript;
+      };
+
+      recognition.onend = function () {
+        micBtn.classList.remove("recording");
+        micBtn.textContent = "🎙️";
+      };
+
+      recognition.onerror = function () {
+        micBtn.classList.remove("recording");
+        micBtn.textContent = "🎙️";
+      };
+    }
+  }
+
+  console.log("🔥 SkyBot UI + Puter Image siap.");
+})();

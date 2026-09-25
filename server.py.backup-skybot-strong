@@ -109,7 +109,7 @@ class Handler(SimpleHTTPRequestHandler):
                 "model": "openai/gpt-oss-20b",
                 "messages": safe_messages,
                 "temperature": 0.2,
-                "max_tokens": 1200
+                "max_tokens": 500
             })
 
             result = subprocess.run(

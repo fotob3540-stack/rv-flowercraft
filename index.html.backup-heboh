@@ -1,152 +1,3 @@
-
-<!-- RV_FLOWERCRAFT_CLOSURE_START -->
-<div id="temporaryClosure" class="rv-natural-closure">
-
-  <div class="rv-nature-sky">
-    <div class="rv-cloud rv-cloud-1"></div>
-    <div class="rv-cloud rv-cloud-2"></div>
-    <div class="rv-cloud rv-cloud-3"></div>
-  </div>
-
-  <div class="rv-floating-flower rv-flower-1">✿</div>
-  <div class="rv-floating-flower rv-flower-2">✿</div>
-  <div class="rv-floating-flower rv-flower-3">✿</div>
-  <div class="rv-floating-flower rv-flower-4">✿</div>
-  <div class="rv-floating-flower rv-flower-5">✿</div>
-
-  <div class="rv-nature-light"></div>
-
-  <div class="rv-closure-card">
-
-    <div class="rv-brand-line">
-      <span></span>
-      RV FLOWERCRAFT
-      <span></span>
-    </div>
-
-    <div class="rv-closure-title">
-      WEB SEMENTARA DITUTUP
-    </div>
-
-    <div class="rv-closure-text">
-      Website RV FLOWERCRAFT sedang ditutup sementara.
-      Silakan tinggalkan pesan untuk admin.
-    </div>
-
-    <div class="rv-message-form">
-
-      <label>Nama pengirim</label>
-      <input
-        id="closureSender"
-        type="text"
-        maxlength="60"
-        autocomplete="off"
-        placeholder="Masukkan nama Anda"
-      >
-
-      <label>Pesan</label>
-      <textarea
-        id="closureMessage"
-        maxlength="1000"
-        placeholder="Tulis pesan untuk admin..."
-      ></textarea>
-
-      <button id="closureSend" class="rv-primary-btn">
-        Kirim Pesan
-      </button>
-
-      <button id="closureView" class="rv-secondary-btn">
-        Lihat Pesan
-      </button>
-
-    </div>
-
-    <div class="rv-closure-footer">
-      RV FLOWERCRAFT
-      <span>Peranap, Pandan Wangi</span>
-    </div>
-
-  </div>
-
-  <div class="rv-road">
-
-    <div class="rv-road-line"></div>
-
-    <div class="rv-car">
-      <div class="rv-car-body"></div>
-      <div class="rv-car-window"></div>
-      <div class="rv-wheel rv-wheel-left"></div>
-      <div class="rv-wheel rv-wheel-right"></div>
-    </div>
-
-    <div class="rv-walking-person rv-person-1">
-      <div class="rv-head"></div>
-      <div class="rv-body"></div>
-      <div class="rv-leg rv-leg-a"></div>
-      <div class="rv-leg rv-leg-b"></div>
-    </div>
-
-    <div class="rv-walking-person rv-person-2">
-      <div class="rv-head"></div>
-      <div class="rv-body"></div>
-      <div class="rv-leg rv-leg-a"></div>
-      <div class="rv-leg rv-leg-b"></div>
-    </div>
-
-  </div>
-
-</div>
-
-<div id="closureLogin" class="rv-closure-modal">
-  <div class="rv-modal-card">
-
-    <button id="closureLoginClose" class="rv-modal-close">×</button>
-
-    <div class="rv-modal-title">
-      ADMIN
-    </div>
-
-    <div class="rv-modal-subtitle">
-      Masukkan password untuk melihat pesan.
-    </div>
-
-    <input
-      id="closurePassword"
-      type="password"
-      placeholder="Password"
-      autocomplete="off"
-    >
-
-    <button id="closureUnlock" class="rv-primary-btn">
-      Buka Pesan
-    </button>
-
-    <div id="closureError" class="rv-closure-error"></div>
-
-  </div>
-</div>
-
-<div id="closureInbox" class="rv-closure-modal">
-
-  <div class="rv-modal-card rv-inbox-card">
-
-    <button id="closureInboxClose" class="rv-modal-close">×</button>
-
-    <div class="rv-modal-title">
-      PESAN MASUK
-    </div>
-
-    <div id="closureMessages" class="rv-messages"></div>
-
-    <button id="closureClear" class="rv-danger-btn">
-      Hapus Semua Pesan
-    </button>
-
-  </div>
-
-</div>
-<!-- RV_FLOWERCRAFT_CLOSURE_END -->
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -258,7 +109,104 @@
 <script src="https://js.puter.com/v2/"></script>
 </head>
 \1
+<div id="temporaryClosure" class="temporary-closure">
+  <div class="closure-box">
+    <h1>KIRIMKAN PESAN<br>KE ADMIN</h1>
 
+    <textarea id="closureMessage" placeholder="Tulis pesan kamu di sini..."></textarea>
+
+    <button id="closureSend">KIRIMKAN PESAN KE ADMIN</button>
+
+    <button id="closureView">lihat pesan</button>
+  </div>
+</div>
+
+<div id="closureLogin" class="closure-modal">
+  <div class="closure-modal-box">
+    <button id="closureLoginClose">×</button>
+    <h2>🔐 ADMIN</h2>
+    <input id="closurePassword" type="password" placeholder="Password">
+    <button id="closureUnlock">BUKA PESAN</button>
+    <p id="closureError"></p>
+  </div>
+</div>
+
+<div id="closureInbox" class="closure-modal">
+  <div class="closure-modal-box inbox-box">
+    <button id="closureInboxClose">×</button>
+    <h2>📨 PESAN MASUK</h2>
+    <div id="closureMessages"></div>
+    <button id="closureClear">HAPUS SEMUA PESAN</button>
+  </div>
+</div>
+
+<div id="siteBackground" aria-hidden="true"></div>
+<div id="siteBackgroundShade"></div>
+<div id="star-container" aria-hidden="true"></div>
+<div id="loader">
+  <img src="assets/loading.jpg" id="loadImage" alt="RV FLOWERCRAFT">
+  <button id="skip">Lewati</button>
+</div>
+<div class="shell">
+<header class="header">
+  <button class="round-btn" id="menuBtn" aria-label="Profil">☰</button>
+  <div class="brand"><div><b>RV FLOWERCRAFT</b><small>FLOWER & BOUQUET SHOP</small></div></div>
+  <div class="header-actions">
+    <div class="music-player" aria-label="Pemutar musik">
+      <div class="music-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <button class="music-btn" id="muteBtn" aria-label="Suara">🔊</button>
+      <button class="music-btn" id="playBtn" aria-label="Putar">▶</button>
+      <button class="music-btn" id="nextBtn" aria-label="Berikutnya">▶|</button>
+      <audio id="musicAudio" preload="auto"></audio>
+    </div>
+  </div>
+</header>
+<main>
+<section class="page active" id="home">
+  <div class="welcome">
+    <div><small class="label">WELCOME</small><h1>Selamat datang di<br><strong>RV FLOWERCRAFT</strong></h1>
+    <p id="storeWelcome">Buket dan bunga pilihan untuk menemani momen spesial kamu.</p></div>
+    <button class="pill" data-page="products">Lihat Katalog</button>
+  </div>
+  <div class="banner">
+    <video autoplay muted loop playsinline><source src="assets/home-eyes.mp4" type="video/mp4"></video>
+    <div class="banner-overlay"><span>RV FLOWERCRAFT</span><small>Bunga untuk setiap momen</small></div>
+  </div>
+  <div class="quick">
+    <button class="quick-card" data-page="products"><i>✿</i><span><b>Katalog</b><small>Lihat bunga</small></span><em>›</em></button>
+    <button class="quick-card" data-page="profile"><i>♡</i><span><b>Tentang toko</b><small>Info & kontak</small></span><em>›</em></button>
+  </div>
+  <div class="section-head"><div><small class="label">KOLEKSI</small><h2>Produk terbaru</h2></div><span id="homeCount">0 produk</span></div>
+  <div id="homeProducts" class="product-grid"></div>
+</section>
+<section class="page" id="products">
+  <div class="section-head top"><div><small class="label">KATALOG</small><h2>Produk bunga</h2></div><span id="productCount">0 produk</span></div>
+  <div class="chips">
+    <button class="chip active" data-category="Semua">Semua</button>
+    <button class="chip" data-category="Buket">Buket</button>
+    <button class="chip" data-category="Fresh Flower">Fresh Flower</button>
+    <button class="chip" data-category="Hampers">Hampers</button>
+  </div>
+  <div id="productGrid" class="product-grid"></div>
+</section>
+
+
+
+
+
+
+<section class="page" id="profile">
+  <div class="section-head top"><div><small class="label">TOKO</small><h2 id="profileTitle">RV FLOWERCRAFT</h2></div></div>
+  <div class="profile-card">
+    <div class="profile-icon">✿</div>
+    <div><h3 id="profileName">RV FLOWERCRAFT</h3><p id="profileDesc">Buket dan bunga pilihan untuk menemani momen spesial kamu.</p></div>
+  </div>
+  <div class="store-info-card">
+    <div class="store-info-row"><span>📍</span><div><small>ALAMAT TOKO</small><b id="profileAddress">Peranap, Pandan Wangi</b></div></div>
+    <div class="store-info-row"><span>🕒</span><div><small>JAM BUKA</small><b id="profileHours">Setiap hari</b></div></div>
+    <div class="store-info-row"><span>💬</span><div><small>WHATSAPP</small><b id="profilePhone">+6285167605533</b></div></div>
+    <div class="store-info-row"><span>📸</span><div><small>INSTAGRAM</small><b id="profileInstagram">@rv flowercraft</b></div></div>
+  </div>
   <div class="contact-card">
     <div><small>HUBUNGI RV FLOWERCRAFT</small><b>Pesan bunga langsung lewat WhatsApp</b></div>
     <button class="pill" id="profileWaBtn">Chat WA</button>

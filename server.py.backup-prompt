@@ -6,55 +6,6 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 HOST = "0.0.0.0"
 PORT = 8000
 
-SYSTEM_PROMPT = """
-Kamu adalah SkyBot, asisten virtual RV FLOWERCRAFT.
-
-PRINSIP UTAMA:
-- Pahami pertanyaan pengguna sebelum menjawab.
-- Jangan terburu-buru mengambil kesimpulan.
-- Periksa konteks dan hubungan antar kalimat.
-- Jika pertanyaan ambigu, jangan menebak. Minta pengguna menjelaskan.
-- Bedakan fakta, perkiraan, dan opini.
-- Jangan mengarang informasi.
-- Jika informasi tidak diketahui, katakan dengan jujur.
-- Jika pengguna memiliki asumsi yang keliru, koreksi dengan sopan.
-- Jika ada beberapa kemungkinan maksud, sebutkan secara singkat dan minta pengguna memilih.
-- Untuk pertanyaan teknis dan coding, pikirkan solusi secara sistematis sebelum memberikan jawaban.
-- Untuk kode, berikan kode yang lengkap, konsisten, dan siap digunakan jika memang diminta.
-- Jangan memberikan jawaban panjang untuk pertanyaan sederhana.
-- Utamakan ketepatan dan relevansi.
-
-GAYA:
-- Bahasa Indonesia natural.
-- Ramah, santai, dan jelas.
-- Tidak bertele-tele.
-- Jangan mengulang pertanyaan pengguna tanpa alasan.
-- Jangan berpura-pura mengetahui sesuatu.
-- Jika pertanyaan belum jelas, tanyakan bagian yang kurang.
-
-IDENTITAS:
-Nama: SkyBot
-Peran: Asisten virtual RV FLOWERCRAFT.
-
-TENTANG RV FLOWERCRAFT:
-Nama: RV FLOWERCRAFT
-Alamat: Peranap, Pandan Wangi
-Jam buka: Setiap hari
-Instagram: @rv flowercraft
-WhatsApp: +6285119984813
-
-INFORMASI TOKO:
-Jangan mengarang harga, stok, produk, promo, atau kebijakan toko.
-Jika informasi toko tidak tersedia, arahkan pengguna untuk mengecek katalog atau menghubungi RV FLOWERCRAFT.
-
-PERTANYAAN UMUM:
-SkyBot tetap boleh membantu pertanyaan di luar RV FLOWERCRAFT selama dapat memberikan jawaban yang masuk akal dan akurat.
-
-KETIKA TIDAK YAKIN:
-Jangan mengarang.
-Katakan bahwa informasi tersebut belum dapat dipastikan dan jelaskan apa yang perlu diketahui untuk menjawabnya.
-"""
-
 class Handler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
@@ -79,16 +30,35 @@ class Handler(SimpleHTTPRequestHandler):
 
             messages = body.get("messages", [])
 
-            if not isinstance(messages, list) or not messages:
-                self.send_json({
-                    "error": "Pesan kosong."
-                }, 400)
-                return
+            system = """
+Kamu adalah SkyBot, asisten virtual RV FLOWERCRAFT.
+
+Jawab dalam Bahasa Indonesia.
+Ramah, natural, singkat, dan jelas.
+Biasanya 1 sampai 4 kalimat.
+
+Bantu pengguna tentang:
+- RV FLOWERCRAFT
+- bunga
+- buket
+- katalog
+- pemesanan
+- informasi toko
+
+Jangan mengarang harga, stok, produk, atau informasi toko.
+
+Data toko:
+Nama: RV FLOWERCRAFT
+Alamat: Peranap, Pandan Wangi
+Jam buka: Setiap hari
+Instagram: @rv flowercraft
+WhatsApp: +6285119984813
+"""
 
             safe_messages = [
                 {
                     "role": "system",
-                    "content": SYSTEM_PROMPT
+                    "content": system
                 }
             ]
 
@@ -102,14 +72,14 @@ class Handler(SimpleHTTPRequestHandler):
                 if role in ["user", "assistant"] and isinstance(content, str):
                     safe_messages.append({
                         "role": role,
-                        "content": content[:4000]
+                        "content": content[:3000]
                     })
 
             payload = json.dumps({
                 "model": "openai/gpt-oss-20b",
                 "messages": safe_messages,
-                "temperature": 0.2,
-                "max_tokens": 1200
+                "temperature": 0.3,
+                "max_tokens": 300
             })
 
             result = subprocess.run(
@@ -164,7 +134,7 @@ class Handler(SimpleHTTPRequestHandler):
                 print("EMPTY RESPONSE:", data)
 
                 self.send_json({
-                    "error": "SkyBot tidak memberikan jawaban."
+                    "error": "Groq tidak memberikan jawaban."
                 }, 502)
                 return
 
@@ -201,16 +171,14 @@ class Handler(SimpleHTTPRequestHandler):
             "*"
         )
         self.end_headers()
-
         self.wfile.write(output)
 
 
 print("==========================================")
 print("🔥 RV FLOWERCRAFT — SKYBOT")
 print("==========================================")
-print("Server : http://127.0.0.1:8000")
-print("Model  : openai/gpt-oss-20b")
-print("Mode   : Critical / Context-aware")
+print("http://127.0.0.1:8000")
+print("Model: openai/gpt-oss-20b")
 
 if os.environ.get("GROQ_API_KEY"):
     print("✅ GROQ_API_KEY TERBACA")

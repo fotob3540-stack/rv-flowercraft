@@ -1,0 +1,191 @@
+import os
+import json
+import urllib.request
+from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
+
+HOST = "0.0.0.0"
+PORT = 8000
+
+class Handler(SimpleHTTPRequestHandler):
+
+    def do_POST(self):
+        if self.path == "/api/ai":
+            self.handle_ai()
+            return
+
+        self.send_error(404, "Not Found")
+
+    def handle_ai(self):
+        try:
+            api_key = os.environ.get("GROQ_API_KEY")
+
+            if not api_key:
+                self.send_json({
+                    "error": "GROQ_API_KEY belum terpasang di server."
+                }, 500)
+                return
+
+            length = int(self.headers.get("Content-Length", 0))
+            raw = self.rfile.read(length)
+
+            body = json.loads(raw.decode("utf-8"))
+
+            messages = body.get("messages", [])
+
+            if not isinstance(messages, list) or not messages:
+                self.send_json({
+                    "error": "Pesan kosong."
+                }, 400)
+                return
+
+            safe_messages = []
+
+            system_prompt = """
+Kamu adalah SkyBot, asisten virtual RV FLOWERCRAFT.
+
+Jawab menggunakan Bahasa Indonesia yang natural,
+ramah, singkat, dan jelas.
+
+Bantu pengguna mengenai:
+- RV FLOWERCRAFT
+- bunga
+- buket
+- katalog
+- cara pemesanan
+- informasi toko
+
+Jangan mengarang harga, stok, produk, atau informasi toko.
+Jika tidak tahu, katakan informasinya belum tersedia.
+
+Data toko:
+Nama: RV FLOWERCRAFT
+Alamat: Peranap, Pandan Wangi
+Jam buka: Setiap hari
+Instagram: @rv flowercraft
+WhatsApp: +6285119984813
+"""
+
+            safe_messages.append({
+                "role": "system",
+                "content": system_prompt
+            })
+
+            for msg in messages[-8:]:
+                if not isinstance(msg, dict):
+                    continue
+
+                role = msg.get("role")
+                content = msg.get("content")
+
+                if role not in ["user", "assistant"]:
+                    continue
+
+                if not isinstance(content, str):
+                    continue
+
+                safe_messages.append({
+                    "role": role,
+                    "content": content[:3000]
+                })
+
+            payload = json.dumps({
+                "model": "openai/gpt-oss-20b",
+                "messages": safe_messages,
+                "temperature": 0.3,
+                "max_tokens": 300
+            }).encode("utf-8")
+
+            request = urllib.request.Request(
+                "https://api.groq.com/openai/v1/chat/completions",
+                data=payload,
+                headers={
+                    "Authorization": "Bearer " + api_key,
+                    "Content-Type": "application/json"
+                },
+                method="POST"
+            )
+
+            with urllib.request.urlopen(request, timeout=30) as response:
+                result = json.loads(
+                    response.read().decode("utf-8")
+                )
+
+            answer = (
+                result.get("choices", [{}])[0]
+                .get("message", {})
+                .get("content", "")
+            )
+
+            if not answer:
+                self.send_json({
+                    "error": "Groq tidak mengembalikan jawaban."
+                }, 502)
+                return
+
+            self.send_json({
+                "answer": answer.strip()
+            }, 200)
+
+        except urllib.error.HTTPError as e:
+            try:
+                error_body = e.read().decode("utf-8")
+            except:
+                error_body = str(e)
+
+            print("Groq HTTP Error:", error_body)
+
+            self.send_json({
+                "error": "Groq error: " + error_body[:1000]
+            }, e.code)
+
+        except Exception as e:
+            print("SkyBot server error:", repr(e))
+
+            self.send_json({
+                "error": "SkyBot server error: " + str(e)
+            }, 500)
+
+    def send_json(self, data, status=200):
+        output = json.dumps(
+            data,
+            ensure_ascii=False
+        ).encode("utf-8")
+
+        self.send_response(status)
+        self.send_header(
+            "Content-Type",
+            "application/json; charset=utf-8"
+        )
+        self.send_header(
+            "Content-Length",
+            str(len(output))
+        )
+        self.send_header(
+            "Access-Control-Allow-Origin",
+            "*"
+        )
+        self.end_headers()
+
+        self.wfile.write(output)
+
+
+print("==========================================")
+print("🔥 RV FLOWERCRAFT SERVER")
+print("==========================================")
+print("Server : http://127.0.0.1:8000")
+print("SkyBot : Groq / openai/gpt-oss-20b")
+print("==========================================")
+
+if os.environ.get("GROQ_API_KEY"):
+    print("✅ GROQ_API_KEY TERBACA")
+else:
+    print("❌ GROQ_API_KEY TIDAK TERBACA")
+
+print("==========================================")
+
+server = ThreadingHTTPServer(
+    (HOST, PORT),
+    Handler
+)
+
+server.serve_forever()
